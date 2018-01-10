@@ -1,0 +1,200 @@
+object fSysSettings: TfSysSettings
+  Left = 714
+  Height = 374
+  Top = 543
+  Width = 320
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
+  Caption = 'System Settings'
+  ClientHeight = 374
+  ClientWidth = 320
+  Position = poMainFormCenter
+  LCLVersion = '1.8.0.6'
+  object fnRun: TFileNameEdit
+    Left = 40
+    Height = 23
+    Top = 64
+    Width = 256
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonCaption = 'Select a file'
+    ButtonWidth = 100
+    NumGlyphs = 1
+    Enabled = False
+    MaxLength = 0
+    TabOrder = 0
+  end
+  object cbrun: TCheckBox
+    Left = 16
+    Height = 19
+    Top = 40
+    Width = 284
+    Caption = 'Run program/command when low (<2.9 mmol/L)'
+    OnChange = cbrunChange
+    TabOrder = 1
+  end
+  object cbNotice: TCheckBox
+    Left = 16
+    Height = 19
+    Top = 88
+    Width = 133
+    Caption = 'Show pop-up notices'
+    Checked = True
+    State = cbChecked
+    TabOrder = 2
+  end
+  object btnOK: TButton
+    Left = 221
+    Height = 25
+    Top = 344
+    Width = 75
+    Caption = '&OK'
+    OnClick = btnOKClick
+    TabOrder = 3
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 21
+    Top = 8
+    Width = 118
+    Caption = 'Optional settings'
+    Font.Height = -16
+    ParentColor = False
+    ParentFont = False
+  end
+  object pnHigh: TPanel
+    Left = 16
+    Height = 18
+    Top = 121
+    Width = 18
+    Color = clBackground
+    ParentColor = False
+    TabOrder = 4
+    OnClick = pnHighClick
+  end
+  object Label2: TLabel
+    Left = 40
+    Height = 15
+    Top = 124
+    Width = 70
+    Caption = 'High glucose'
+    ParentColor = False
+  end
+  object Label3: TLabel
+    Left = 40
+    Height = 15
+    Top = 147
+    Width = 114
+    Caption = 'Close to high glucose'
+    ParentColor = False
+  end
+  object pnSoonHigh: TPanel
+    Left = 16
+    Height = 18
+    Top = 144
+    Width = 18
+    Color = clBackground
+    ParentColor = False
+    TabOrder = 5
+    OnClick = pnHighClick
+  end
+  object Label4: TLabel
+    Left = 40
+    Height = 15
+    Top = 171
+    Width = 61
+    Caption = 'OK Glucose'
+    ParentColor = False
+  end
+  object pnOK: TPanel
+    Left = 16
+    Height = 18
+    Top = 168
+    Width = 18
+    Color = clBackground
+    ParentColor = False
+    TabOrder = 6
+    OnClick = pnHighClick
+  end
+  object Label5: TLabel
+    Left = 40
+    Height = 15
+    Top = 195
+    Width = 66
+    Caption = 'Low glucose'
+    ParentColor = False
+  end
+  object pnLow: TPanel
+    Left = 16
+    Height = 18
+    Top = 192
+    Width = 18
+    Color = clBackground
+    ParentColor = False
+    TabOrder = 7
+    OnClick = pnHighClick
+  end
+  object cbAlert: TCheckBox
+    Left = 16
+    Height = 19
+    Top = 224
+    Width = 291
+    Caption = 'Alert when an insulin dose might have been missed'
+    Enabled = False
+    OnChange = cbAlertChange
+    TabOrder = 8
+  end
+  object Label6: TLabel
+    Left = 40
+    Height = 12
+    Top = 240
+    Width = 277
+    Caption = 'If NightScout lacks insulin data from within 1h, alert if BG is trending up.'
+    Font.Height = -9
+    ParentColor = False
+    ParentFont = False
+  end
+  object cbOnTop: TCheckBox
+    Left = 16
+    Height = 19
+    Top = 264
+    Width = 186
+    Caption = 'Try to stay on top of other apps'
+    TabOrder = 9
+  end
+  object tbSnooze: TTrackBar
+    Left = 16
+    Height = 25
+    Top = 312
+    Width = 280
+    Max = 90
+    OnChange = tbSnoozeChange
+    Position = 0
+    TickMarks = tmTopLeft
+    TabOrder = 10
+  end
+  object lblSnooze: TLabel
+    Left = 16
+    Height = 15
+    Top = 296
+    Width = 78
+    Caption = 'Snoooze time: '
+    ParentColor = False
+  end
+  object cbValue: TCheckBox
+    Left = 188
+    Height = 19
+    Top = 147
+    Width = 124
+    Caption = 'Color glucose value'
+    TabOrder = 11
+  end
+  object cbTrend: TCheckBox
+    Left = 188
+    Height = 19
+    Top = 168
+    Width = 80
+    Caption = 'Color trend'
+    TabOrder = 12
+  end
+end

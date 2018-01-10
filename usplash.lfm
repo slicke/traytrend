@@ -1,0 +1,46 @@
+object Splash: TSplash
+  Left = 409
+  Height = 77
+  Top = 488
+  Width = 396
+  BorderStyle = bsNone
+  Caption = 'Splash'
+  ClientHeight = 77
+  ClientWidth = 396
+  Color = 3487029
+  FormStyle = fsSplash
+  Position = poScreenCenter
+  LCLVersion = '1.8.0.6'
+  object Label1: TLabel
+    Left = 56
+    Height = 15
+    Top = 27
+    Width = 274
+    Caption = 'Getting initial values from NightScout, please hold...'
+    Font.Color = clWhite
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 16
+    Height = 15
+    Top = 56
+    Width = 369
+    Caption = 'This application is intended for research. Not intended for medical use.'
+    Font.Color = 5131854
+    Font.Style = [fsItalic]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 5
+    Top = 0
+    Width = 396
+    Align = alTop
+    BevelOuter = bvNone
+    Color = 8079110
+    ParentColor = False
+    TabOrder = 0
+  end
+end
