@@ -3,9 +3,11 @@
 Windows/Linux Desktop app for [NightScout](http://www.nightscout.info)!
 
 _Main window_
+
 ![Main](https://raw.githubusercontent.com/slicke/traytrend/master/img/beta1.png "Main screen")
 
 _Settings_
+
 ![Settings](https://raw.githubusercontent.com/slicke/traytrend/master/img/beta1_settings.png "Settings")
 
 
