@@ -1,12 +1,12 @@
-# ![Logo](https://github.com/slicke/raw/master/img/up1.jpg "Logo") TrayTrend
+# ![Logo](https://raw.githubusercontent.com/slicke/traytrend/master/img/up1.jpg "Logo") TrayTrend
 
 Windows/Linux Desktop app for [NightScout](http://www.nightscout.info)!
 
 _Main window_
-![Main](https://github.com/slicke/raw/master/img/beta1.png "Main screen")
+![Main](https://raw.githubusercontent.com/slicke/traytrend/master/img/beta1.png "Main screen")
 
 _Settings_
-![Settings](https://github.com/slicke/raw/master/img/beta1_settings.png "Settings")
+![Settings](https://raw.githubusercontent.com/slicke/traytrend/master/img/beta1_settings.png "Settings")
 
 
 ## Features
