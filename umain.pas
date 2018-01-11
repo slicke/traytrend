@@ -26,7 +26,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, lazcanvas, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
   fpImage, math, fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys;
+  lazutf8sysutils, uconfig, typinfo, usys, lclintf, uhover;
 
 type
 
@@ -34,10 +34,9 @@ type
   TUserVals = record
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
-    mmol: boolean;
     url, api, lowexec: string;
-    alert, colorval, colortrend: boolean;
-    snooze: integer;
+    mmol, alert, colorval, colortrend, hover: boolean;
+    snooze, arrows, hovertrans: integer;
   end;
 
   // Ported from server source code
@@ -67,10 +66,12 @@ type
     procedure btConfClick(Sender: TObject);
     procedure btOSClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
     procedure updateTrend(velocity: single; desc, device: string; newdate: tdatetime);
   private
     procedure fetchValues;
+    function CheckVesion(current: string): boolean;
   public
     procedure UpdateBG;
     function SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
@@ -120,7 +121,7 @@ begin
   end;
 end;
 
-// Fetch a JSON resource form Nightscout
+// Fetch version data from GitHub
 function DoNSReq(metric: string): TJSONData;
 var
   ans : string;
@@ -133,6 +134,28 @@ begin
    finally
      Free;
    end;
+end;
+// Fetch a JSON resource form Nightscout
+function tfMain.CheckVesion(current: string): boolean;
+var
+  ans : string;
+  res:TJSONData;
+begin
+//     res := GetJSON(ans);
+  with TFPHTTPClient.Create(nil) do begin
+   AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb)');                       // We don't get any result without the user agent seet
+   ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases');
+  end;
+  if ans = '' then
+    Exit;
+
+  try
+    res := GetJSON(ans);
+    if res.Items[0].FindPath('tag_name').AsString <> current then
+          if MessageDlg('Update available', 'A new version is available!'+LineEnding+'Version ' + res.Items[0].FindPath('tag_name').AsString+' has been released. This is version '+current+LineEnding+LineEnding+'Would you like to read about the new version?', mtConfirmation,  [mbYes, mbNo], 0) = mrYes then
+               openurl(res.Items[0].FindPath('html_url').AsString);
+  finally
+  end;
 end;
 
 // Get glucose values from NS
@@ -254,6 +277,9 @@ begin
      cfg.lowexec := cfgf.GetValue('/system/app', '');
      cfg.snooze :=  cfgf.GetValue('/gui/snooze', 30);;
 
+     cfg.arrows := cfgf.GetValue('/gui/arrows', 1);
+     cfg.hover := cfgf.GetValue('/gui/hover', false);;
+     cfg.hovertrans := cfgf.GetValue('/gui/hovertrans', 100);;
      cfgf.free;
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
@@ -265,15 +291,51 @@ begin
   // Since we initially disable things when no config exists, we need to make sure we enable them now
       btnUpdate.Enabled := true;
       btOS.Enabled := true;
+
 end;
 
+procedure MirrorArrow(boxes: array of TImageList; index, dest: integer);
+var
+  pic, src: TBitmap;
+  i, j: integer;
+  im: TImageList;
+begin
+  for im in boxes do begin
+    pic := TBitmap.Create;
+    src := TBitmap.Create;
+    im.GetBitmap(index, src);
+    with src do begin
+      pic.Width:=im.Width;
+      pic.Height:=im.Height;
+    for i:=0 to im.Width-1 do
+         for j:=0 to im.Height-1 do
+           pic.Canvas.Pixels[Width-i-1, j]:=src.Canvas.Pixels[i,j];
+     im.Replace(dest, pic, nil);
+    end;
+    pic.free;
+    src.free;
+  end;
+end;
 
 procedure TfMain.FormCreate(Sender: TObject);
+var
+  src, dest: trect;
+  i: integer;
 begin
   // Make sure the splash is showing
   Application.ProcessMessages;
+
   // Load settings
   LoadCFG;
+
+  case cfg.arrows of
+    1: begin                       // Both left
+      MirrorArrow([ilBG, ilFull], 5, 5);
+    end;
+    2: begin  // Both right
+      MirrorArrow([ilBG, ilFull], 3, 3);
+    end;
+  end;
 
   // Check if we have any useable settings data
   if cfg.url <> '' then
@@ -282,6 +344,21 @@ begin
       // Disable the GUI elements if we have no data
       btnUpdate.Enabled := false;
       btOS.Enabled := false;
+  end;
+
+  CheckVesion('v0.1');
+
+end;
+
+procedure TfMain.FormShow(Sender: TObject);
+begin
+  if fHover.Visible then
+    fHover.Hide; // We need to trigger Show anybow
+
+  if cfg.hover then begin
+     fHover.trans := cfg.hovertrans;
+     fHover.Visible:=true;
+     fHover.lblVal.Caption := formatBG(bgval, true);
   end;
 end;
 
@@ -323,6 +400,15 @@ begin
   fSysSettings.cbrun.Checked := cfg.lowexec <> '';
   fSysSettings.fnrun.Enabled := cfg.lowexec <> '';
   fSysSettings.fnRun.FileName:= cfg.lowexec;
+  fSysSettings.cbHover.Checked := cfg.hover;
+  fSysSettings.seHover.Value := cfg.hovertrans;
+
+  if cfg.arrows = 1 then
+     fSysSettings.cbArrowRight.Checked:=true
+  else if cfg.arrows = 2 then
+      fSysSettings.cbArrowLeft.Checked:=true
+  else
+      fSysSettings.cbArrowMix.Checked:=true;
 
   fSysSettings.ShowModal;
   // We need to reset these if the color is disabled
@@ -330,6 +416,7 @@ begin
   lblVal.Font.Color:=clDefault;
   LoadCFG;
   UpdateBG;
+  FormShow(self);
 end;
 
 // Figure out which image to show when the trend changes and the name
@@ -443,6 +530,8 @@ begin
     TempBitmap.Free;
   end;
   lblVal.caption := formatBG(bgval, false);
+  if assigned(fHover) then
+    fHover.lblVal.Caption := formatBG(bgval, true);
 end;
 
 {$R *.lfm}

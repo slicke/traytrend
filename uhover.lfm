@@ -1,0 +1,30 @@
+object fHover: TfHover
+  Left = 791
+  Height = 49
+  Top = 612
+  Width = 127
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsToolWindow
+  Caption = 'Blood Glucose'
+  ClientHeight = 49
+  ClientWidth = 127
+  Color = clBlack
+  FormStyle = fsSystemStayOnTop
+  OnShow = FormShow
+  LCLVersion = '1.8.0.6'
+  Visible = True
+  object lblVal: TLabel
+    Left = 0
+    Height = 49
+    Top = 0
+    Width = 127
+    Align = alClient
+    Alignment = taCenter
+    Caption = 'lblVal'
+    Font.Color = clWhite
+    Font.Height = -33
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+end
