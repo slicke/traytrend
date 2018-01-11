@@ -4,12 +4,13 @@ object fMain: TfMain
   Top = 380
   Width = 376
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = bsToolWindow
+  BorderStyle = bsSingle
   Caption = 'TrayTrend - BETA'
   ClientHeight = 186
   ClientWidth = 376
   Color = 15461355
   OnCreate = FormCreate
+  OnShow = FormShow
   Position = poScreenCenter
   LCLVersion = '1.8.0.6'
   object pnTop: TPanel

@@ -26,7 +26,7 @@ _Settings_
 - Read treatment data and present doses and carbs
 
 ## Get it
-The Windows version is available on GitHub. Linux support is not 100% complete.
+The Windows version is available on GitHub. Linux support is not 100% complete, there are some GUI issues but a working build exists. Feature wise both versions are identical.
 
 ## Open Source
 TrayTrend is free software/open source. You are free to modify and distribute it under the GPLv3. Pull requests are very welcome if you improve something!

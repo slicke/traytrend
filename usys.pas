@@ -24,7 +24,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, EditBtn,
-  StdCtrls, ExtCtrls, ComCtrls, jsonConf;
+  StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf;
 
 type
 
@@ -32,12 +32,15 @@ type
 
   TfSysSettings = class(TForm)
     btnOK: TButton;
+    cbArrowRight: TRadioButton;
+    cbArrowMix: TRadioButton;
     cbrun: TCheckBox;
     cbNotice: TCheckBox;
     cbAlert: TCheckBox;
     cbOnTop: TCheckBox;
     cbValue: TCheckBox;
     cbTrend: TCheckBox;
+    cbHover: TCheckBox;
     fnRun: TFileNameEdit;
     Label1: TLabel;
     Label2: TLabel;
@@ -45,14 +48,20 @@ type
     Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
     lblSnooze: TLabel;
     pnHigh: TPanel;
     pnSoonHigh: TPanel;
     pnOK: TPanel;
     pnLow: TPanel;
+    cbArrowLeft: TRadioButton;
+    seHover: TSpinEdit;
     tbSnooze: TTrackBar;
     procedure btnOKClick(Sender: TObject);
     procedure cbAlertChange(Sender: TObject);
+    procedure cbArrowLeftChange(Sender: TObject);
+    procedure cbArrowLeftClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
     procedure pnHighClick(Sender: TObject);
     procedure tbSnoozeChange(Sender: TObject);
@@ -75,6 +84,7 @@ procedure TfSysSettings.btnOKClick(Sender: TObject);
 var
   c: TJSONConfig;
   cfgname: string;
+  t: integer;
 begin
   cfgname := GetAppConfigFile(false);
   ForceDirectories(ExtractFileDir(cfgname));
@@ -98,6 +108,20 @@ begin
      c.SetValue('/glucose/value', cbValue.Checked);
      c.SetValue('/glucose/trend', cbTrend.Checked);
 
+     t := c.GetValue('/gui/arrows', 0);
+     if cbArrowRight.Checked then
+       c.setValue('/gui/arrows', 1)
+     else if cbArrowLeft.Checked then
+       c.setValue('/gui/arrows', 2)
+     else
+       c.setValue('/gui/arrows', 0);
+
+     if t <> c.GetValue('/gui/arrows', 0) then
+       ShowMessage('Arrows changes will take effect after the next restart.');
+
+     c.SetValue('/gui/hover', cbHover.Checked);
+     c.SetValue('/gui/hovertrans', seHover.Value);
+
      c.SetValue('/dose/alert', cbAlert.Checked);
      if cbOnTop.Checked then
           c.SetValue('/gui/window', ord(fsSystemStayOnTop))
@@ -115,6 +139,16 @@ begin
 end;
 
 procedure TfSysSettings.cbAlertChange(Sender: TObject);
+begin
+
+end;
+
+procedure TfSysSettings.cbArrowLeftChange(Sender: TObject);
+begin
+
+end;
+
+procedure TfSysSettings.cbArrowLeftClick(Sender: TObject);
 begin
 
 end;

@@ -25,7 +25,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, umain, uconfig, usplash, usys
+  Forms, umain, uconfig, usplash, usys, uhover
   { you can add units after this };
 
 {$R *.res}
@@ -42,6 +42,7 @@ begin
     Splash.Close;
   splash.free;
   Application.CreateForm(TfSysSettings, fSysSettings);
+  Application.CreateForm(TfHover, fHover);
   Application.Run;
 end.
 

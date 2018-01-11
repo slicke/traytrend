@@ -1,12 +1,12 @@
 object fSysSettings: TfSysSettings
-  Left = 714
-  Height = 374
-  Top = 543
+  Left = 950
+  Height = 480
+  Top = 352
   Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
-  ClientHeight = 374
+  ClientHeight = 480
   ClientWidth = 320
   Position = poMainFormCenter
   LCLVersion = '1.8.0.6'
@@ -46,7 +46,7 @@ object fSysSettings: TfSysSettings
   object btnOK: TButton
     Left = 221
     Height = 25
-    Top = 344
+    Top = 448
     Width = 75
     Caption = '&OK'
     OnClick = btnOKClick
@@ -196,5 +196,67 @@ object fSysSettings: TfSysSettings
     Width = 80
     Caption = 'Color trend'
     TabOrder = 12
+  end
+  object Label7: TLabel
+    Left = 16
+    Height = 15
+    Top = 352
+    Width = 65
+    Caption = 'Arrows face:'
+    ParentColor = False
+  end
+  object cbArrowLeft: TRadioButton
+    Left = 24
+    Height = 19
+    Top = 368
+    Width = 65
+    Caption = 'Both left'
+    OnChange = cbArrowLeftChange
+    OnClick = cbArrowLeftClick
+    TabOrder = 13
+  end
+  object cbArrowRight: TRadioButton
+    Left = 104
+    Height = 19
+    Top = 368
+    Width = 73
+    Caption = 'Both right'
+    OnChange = cbArrowLeftChange
+    OnClick = cbArrowLeftClick
+    TabOrder = 14
+  end
+  object cbArrowMix: TRadioButton
+    Left = 184
+    Height = 19
+    Top = 368
+    Width = 119
+    Caption = 'High right, low left'
+    OnChange = cbArrowLeftChange
+    OnClick = cbArrowLeftClick
+    TabOrder = 15
+  end
+  object cbHover: TCheckBox
+    Left = 16
+    Height = 19
+    Top = 400
+    Width = 127
+    Caption = 'Show hover window'
+    TabOrder = 16
+  end
+  object Label8: TLabel
+    Left = 40
+    Height = 15
+    Top = 424
+    Width = 76
+    Caption = 'Transparency: '
+    ParentColor = False
+  end
+  object seHover: TSpinEdit
+    Left = 127
+    Height = 23
+    Top = 422
+    Width = 58
+    MaxValue = 255
+    TabOrder = 17
   end
 end
