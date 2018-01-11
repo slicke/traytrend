@@ -34,6 +34,7 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Panel1: TPanel;
+    procedure FormShow(Sender: TObject);
   private
 
   public
@@ -46,6 +47,14 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TSplash }
+
+procedure TSplash.FormShow(Sender: TObject);
+begin
+  width := 490;
+  application.processmessages;
+end;
 
 end.
 

@@ -283,6 +283,13 @@ begin
       btnUpdate.Enabled := false;
       btOS.Enabled := false;
   end;
+  {$ifndef Win32}
+    self.font.size := 8;
+    label5.font.size := 9;
+    label5.left := 20;
+    lblspeed.font.size := 9;
+    lbltimeago.font.size := 9;
+  {$endif}
 end;
 
 // Update the readings when needed
@@ -324,6 +331,13 @@ begin
   fSysSettings.fnrun.Enabled := cfg.lowexec <> '';
   fSysSettings.fnRun.FileName:= cfg.lowexec;
 
+  {$ifndef Win32}
+  fsyssettings.font.size := 8;
+  fsyssettings.tbsnooze.top := 320;
+  fsyssettings.label6.top := 245;
+  fsyssettings.label6.font.size := 6;
+  fsyssettings.width := 315;
+  {$endif}
   fSysSettings.ShowModal;
   // We need to reset these if the color is disabled
   lblTrend.Font.Color:=clDefault;
