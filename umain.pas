@@ -40,7 +40,7 @@ type
   end;
 
   // Ported from server source code
-  TDirection = (NONE, DoubleUp, SingleUp, FortyFiveUp, Flat, FortyFiveDown, SingleDown, DoubleDown, NOT_COMPUTABLE, RATE_OUT_OF_RANGE);
+  TDirection = (NONE, DoubleUp, SingleUp, FortyFiveUp, Flat, FortyFiveDown, SingleDown, DoubleDown, NOT_COMPUTABLE, RATE_OUT_OF_RANGE, NO_DATA);
 
   { TfMain }
 
@@ -118,6 +118,8 @@ begin
       result := 'Not computable by NightScout';
     RATE_OUT_OF_RANGE:
       result := 'Rate out of range';
+    NO_DATA:
+      result := 'No recent readings';
   end;
 end;
 
@@ -126,6 +128,7 @@ function DoNSReq(metric: string): TJSONData;
 var
   ans : string;
 begin
+  try
    with TFPHTTPClient.Create(nil) do
    try
      AddHeader('API-SECRET', SHA1Print(SHA1String(cfg.api)));
@@ -134,6 +137,9 @@ begin
    finally
      Free;
    end;
+  except
+    on E: Exception do ShowMessage('A netowork error occured: ' + E.Message + ListSeparator + 'A new attempt will be made on the next schedule ');
+  end;
 end;
 // Fetch a JSON resource form Nightscout
 function tfMain.CheckVesion(current: string): boolean;
@@ -169,7 +175,7 @@ begin
   // Contact the API over SSL
   lblTimeAgo.Caption:= 'Updating now';
   Application.ProcessMessages;
-  res := DoNSREq('entries');
+  res := DoNSReq('entries');
 
   // Go through all resturned values in reverse order, so we enter them in chronological order
   for i := res.Count-1 downto 0 do begin
@@ -427,8 +433,16 @@ var
   dir: TDirection;
 begin
   // Parse the direction
+  if title= '' then begin
+    dir := NO_DATA;
+    lblVal.Font.Color:=clNone;
+    lbl.Caption := GetDirectionName(dir);
+    imTrend.Picture.Clear;
+    Exit;
+  end;
+
   try
-    ReadStr(title, dir);
+    ReadStr(title, dir)
   except
     dir := NOT_COMPUTABLE;
   end;
