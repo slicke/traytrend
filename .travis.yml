@@ -1,0 +1,36 @@
+language: generic
+sudo: required
+dist: xenial
+
+os:
+  - linux
+
+env:
+  global:
+    - WINEPREFIX=~/.winelaz
+    - DISPLAY=:99.0
+  matrix:
+          #    - LAZ_PKG=true  # Use the latest version from the default package manager
+    - LAZ_VER=1.8.0
+
+matrix:
+  include:
+    - os: linux
+      env: LAZ_VER=1.8.0 LAZ_REL=32 LAZ_ENV=wine WINEARCH=win32 LAZ_OPT="--os=win32 --cpu=i386"
+
+before_install:
+  # Start virtual display server
+  - Xvfb $DISPLAY &
+  - chmod +x .travis.install.py 
+
+install:
+  # Install prerequisites (fpc/lazarus/wine/qemu)
+  - ./.travis.install.py
+
+script:
+  - lazbuild $LAZ_OPT TrayTrend.lpi       
+
+notifications:
+  email:
+    on_success: false
+    on_failure: change
