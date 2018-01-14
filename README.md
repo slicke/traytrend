@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/slicke/traytrend.svg?branch=master)](https://travis-ci.org/slicke/traytrend)
 # ![Logo](https://raw.githubusercontent.com/slicke/traytrend/master/img/up1.jpg "Logo") TrayTrend
 
 Windows/Linux Desktop app for [NightScout](http://www.nightscout.info)!
