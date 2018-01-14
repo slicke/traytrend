@@ -1,12 +1,12 @@
 object fSysSettings: TfSysSettings
   Left = 950
-  Height = 480
+  Height = 481
   Top = 352
   Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
-  ClientHeight = 480
+  ClientHeight = 481
   ClientWidth = 320
   Position = poMainFormCenter
   LCLVersion = '1.8.0.6'

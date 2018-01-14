@@ -24,7 +24,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  EditBtn, jsonConf;
+  EditBtn, Spin, jsonConf;
 
 type
 
@@ -36,8 +36,13 @@ type
     edSecret: TEdit;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
     rbMmol: TRadioButton;
     rbMgdl: TRadioButton;
+    seFreq: TSpinEdit;
     procedure btnOKClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
   private
@@ -69,6 +74,7 @@ begin
      c.SetValue('/glucose/mmol', rbMmol.Checked);
      c.SetValue('/remote/url', edURL.Text);
      c.SetValue('/remote/key', edSecret.Text);
+     c.SetValue('/remote/freq', seFreq.Value*60000);
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
     [mbOK],0);
