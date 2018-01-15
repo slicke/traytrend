@@ -34,10 +34,16 @@ type
     btnOK: TButton;
     edURL: TEdit;
     edSecret: TEdit;
+    fnLow: TFileNameEdit;
+    fnHigh: TFileNameEdit;
     Label1: TLabel;
+    Label10: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
     rbMmol: TRadioButton;
@@ -75,6 +81,8 @@ begin
      c.SetValue('/remote/url', edURL.Text);
      c.SetValue('/remote/key', edSecret.Text);
      c.SetValue('/remote/freq', seFreq.Value*60000);
+     c.SetValue('/audio/low', fnLow.FileName);
+     c.SetValue('/audio/high', fnHigh.FileName);
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
     [mbOK],0);

@@ -1,12 +1,12 @@
 object fSettings: TfSettings
-  Left = 579
-  Height = 285
-  Top = 292
+  Left = 595
+  Height = 397
+  Top = 359
   Width = 320
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Nightsout settings'
-  ClientHeight = 285
+  ClientHeight = 397
   ClientWidth = 320
   FormStyle = fsStayOnTop
   Position = poMainFormCenter
@@ -46,9 +46,9 @@ object fSettings: TfSettings
     TabOrder = 1
   end
   object btnOK: TButton
-    Left = 221
+    Left = 229
     Height = 25
-    Top = 248
+    Top = 360
     Width = 75
     Caption = '&OK'
     OnClick = btnOKClick
@@ -115,5 +115,71 @@ object fSettings: TfSettings
     Width = 43
     Caption = 'minutes'
     ParentColor = False
+  end
+  object Label5: TLabel
+    Left = 16
+    Height = 21
+    Top = 240
+    Width = 165
+    Caption = 'NightScout music alerts'
+    Font.Height = -16
+    ParentColor = False
+    ParentFont = False
+  end
+  object fnLow: TFileNameEdit
+    Left = 24
+    Height = 23
+    Top = 280
+    Width = 280
+    DialogOptions = [ofFileMustExist, ofNoNetworkButton, ofEnableSizing, ofViewDetail]
+    Filter = 'WAV Audio|*.wav'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonCaption = 'Select a file'
+    ButtonWidth = 100
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 6
+  end
+  object fnHigh: TFileNameEdit
+    Left = 24
+    Height = 23
+    Top = 328
+    Width = 280
+    DialogOptions = [ofFileMustExist, ofNoNetworkButton, ofEnableSizing, ofViewDetail]
+    Filter = 'WAV Audio|*.wav'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonCaption = 'Select a file'
+    ButtonWidth = 100
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 7
+  end
+  object Label6: TLabel
+    Left = 24
+    Height = 15
+    Top = 264
+    Width = 76
+    Caption = 'Play when low'
+    ParentColor = False
+  end
+  object Label7: TLabel
+    Left = 24
+    Height = 15
+    Top = 311
+    Width = 81
+    Caption = 'Play when high'
+    ParentColor = False
+  end
+  object Label10: TLabel
+    Left = 24
+    Height = 30
+    Top = 352
+    Width = 169
+    Caption = 'Cstom audio alerts,'#13#10'EXPERIMENTAL - Windows only!'
+    Font.Style = [fsItalic]
+    ParentColor = False
+    ParentFont = False
   end
 end

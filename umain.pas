@@ -26,7 +26,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, lazcanvas, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
   fpImage, math, fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys, lclintf, uhover;
+  lazutf8sysutils, uconfig, typinfo, usys, lclintf, uhover {$ifdef WINDOWS}, mmsystem {$endif};
 
 type
 
@@ -34,7 +34,7 @@ type
   TUserVals = record
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
-    url, api, lowexec: string;
+    url, api, lowexec, sndhyper, sndhypo: string;
     mmol, alert, colorval, colortrend, hover: boolean;
     snooze, arrows, hovertrans: integer;
   end;
@@ -282,6 +282,8 @@ begin
 
      cfg.lowexec := cfgf.GetValue('/system/app', '');
      cfg.snooze :=  cfgf.GetValue('/gui/snooze', 30);;
+     cfg.sndhyper :=  cfgf.GetValue('/audio/high', '');;
+     cfg.sndhypo :=  cfgf.GetValue('/audio/low', '');;
 
      cfg.arrows := cfgf.GetValue('/gui/arrows', 1);
      cfg.hover := cfgf.GetValue('/gui/hover', false);;
@@ -385,6 +387,8 @@ begin
   fSettings.edSecret.Text := cfg.api;
   fSettings.edURL.Text := cfg.url;
   fSettings.rbMmol.Checked := cfg.mmol;
+  fSettings.fnHigh.FileName := cfg.sndhyper;
+  fSettings.fnLow.FileName := cfg.sndhypo;
   fSettings.ShowModal;
   LoadCFG;
   btnUpdate.Click;
@@ -462,9 +466,17 @@ begin
   ilBG.GetIcon(i, smallimg);
   ilFull.GetIcon(i, img);
 
-
+  sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault);
   // Manage notifications
   if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
+    {$ifdef Windows}
+    if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
+      sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
+    else if (bgval < cfg.hypo) and (cfg.sndhyper <> '') then
+      sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
+    {$endif}
+
+
     if (assigned(notifi)) (*and (lastalert <> dir)*) and (snoozed >= cfg.snooze) then begin
       ilFull.GetIcon(i, notifi.Icon.Icon);
       notifi.Text := lbl.Caption+' - '+lblTimeAgo.caption+LineEnding+LineEnding+'Current value: ' + formatBG(bgval, false)+LineEnding+'Last value: '+formatBG(lastbg, false);
