@@ -83,6 +83,8 @@ begin
      c.SetValue('/remote/freq', seFreq.Value*60000);
      c.SetValue('/audio/low', fnLow.FileName);
      c.SetValue('/audio/high', fnHigh.FileName);
+
+     c.SetValue('/remote/freq', seFreq.Value*60000);
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
     [mbOK],0);
