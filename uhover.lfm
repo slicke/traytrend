@@ -1,7 +1,7 @@
 object fHover: TfHover
-  Left = 791
+  Left = 825
   Height = 49
-  Top = 612
+  Top = 560
   Width = 127
   BorderIcons = [biSystemMenu]
   BorderStyle = bsNone
@@ -31,6 +31,8 @@ object fHover: TfHover
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+    PopupMenu = fMain.pnMain
+    OnClick = lblValClick
     OnMouseDown = lblValMouseDown
     OnMouseEnter = FormMouseEnter
     OnMouseLeave = FormMouseLeave

@@ -17,6 +17,7 @@ type
     procedure FormMouseLeave(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
+    procedure lblValClick(Sender: TObject);
     procedure lblValMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure lblValMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
@@ -48,6 +49,11 @@ begin
 
 end;
 
+procedure TfHover.lblValClick(Sender: TObject);
+begin
+
+end;
+
 procedure TfHover.lblValMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -55,7 +61,8 @@ begin
     mdown := True;
     PX := X;
     PY := Y;
-  end;
+  end;// else if Button = mbRight then
+//    self.PopupMenu.PopUp;
 end;
 
 procedure TfHover.lblValMouseMove(Sender: TObject; Shift: TShiftState; X,

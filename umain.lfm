@@ -1,7 +1,7 @@
 object fMain: TfMain
-  Left = 357
+  Left = 236
   Height = 186
-  Top = 380
+  Top = 399
   Width = 376
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -139,7 +139,8 @@ object fMain: TfMain
   object tTray: TTrayIcon
     BalloonFlags = bfInfo
     BalloonTitle = 'Nightscout'
-    left = 111
+    PopUpMenu = pnMain
+    left = 112
     top = 73
   end
   object ilBG: TImageList
@@ -6017,5 +6018,34 @@ object fMain: TfMain
     Visible = False
     left = 184
     top = 104
+  end
+  object pnMain: TPopupMenu
+    Images = ilBG
+    left = 278
+    top = 51
+    object MenuItem1: TMenuItem
+      Caption = 'Show TrayTrend'
+      ImageIndex = 3
+      OnClick = MenuItem1Click
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Settings'
+      ImageIndex = 4
+      object MenuItem3: TMenuItem
+        Caption = 'NightScout'
+        OnClick = MenuItem3Click
+      end
+      object MenuItem4: TMenuItem
+        Caption = 'System'
+        OnClick = MenuItem4Click
+      end
+    end
+    object MenuItem6: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem5: TMenuItem
+      Caption = 'Open NightScout'
+      OnClick = MenuItem5Click
+    end
   end
 end

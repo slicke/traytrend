@@ -26,7 +26,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, lazcanvas, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
   fpImage, math, fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys, lclintf, uhover {$ifdef WINDOWS}, mmsystem {$endif};
+  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem {$endif};
 
 type
 
@@ -58,6 +58,13 @@ type
     Label5: TLabel;
     lblTrend: TLabel;
     lblVal: TLabel;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    pnMain: TPopupMenu;
     pnTop: TPanel;
     pnAlert: TPopupNotifier;
     tUpdate: TTimer;
@@ -67,6 +74,10 @@ type
     procedure btOSClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure MenuItem1Click(Sender: TObject);
+    procedure MenuItem3Click(Sender: TObject);
+    procedure MenuItem4Click(Sender: TObject);
+    procedure MenuItem5Click(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
     procedure updateTrend(velocity: single; desc, device: string; newdate: tdatetime);
   private
@@ -368,6 +379,27 @@ begin
      fHover.Visible:=true;
      fHover.lblVal.Caption := formatBG(bgval, true);
   end;
+end;
+
+procedure TfMain.MenuItem1Click(Sender: TObject);
+begin
+  Show;
+  BringToFront;
+end;
+
+procedure TfMain.MenuItem3Click(Sender: TObject);
+begin
+  btConf.Click;
+end;
+
+procedure TfMain.MenuItem4Click(Sender: TObject);
+begin
+  btOS.Click;
+end;
+
+procedure TfMain.MenuItem5Click(Sender: TObject);
+begin
+  OpenURL(cfg.url);
 end;
 
 // Update the readings when needed
