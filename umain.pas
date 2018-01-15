@@ -233,7 +233,7 @@ begin
 
   // If the user wants to run a process if low, we do it here
   if (bgval < 3) and (cfg.lowexec <> '') and (MinutesBetween(Now, lastalertts) >= cfg.snooze) then
-    ExecuteProcess(Utf8ToAnsi(cfg.lowexec), '', []);
+    ExecuteProcess(Utf8ToAnsi(cfg.lowexec), '--bg-alert='+floattostr(bgval), []);
 end;
 
 // Process a reading into a good value.
