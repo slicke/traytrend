@@ -548,6 +548,11 @@ begin
       sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
     else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
       sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
+    {$else}
+    if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
+      SysUtils.ExecuteProcess(FindDefaultExecutablePath('paplay'), cfg.sndhyper)
+    else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
+      SysUtils.ExecuteProcess(FindDefaultExecutablePath('paplay'), cfg.sndhypo);
     {$endif}
 
 
