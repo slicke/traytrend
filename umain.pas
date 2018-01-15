@@ -498,13 +498,12 @@ begin
   ilBG.GetIcon(i, smallimg);
   ilFull.GetIcon(i, img);
 
-  sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault);
   // Manage notifications
   if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
     {$ifdef Windows}
     if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
       sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
-    else if (bgval < cfg.hypo) and (cfg.sndhyper <> '') then
+    else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
       sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
     {$endif}
 

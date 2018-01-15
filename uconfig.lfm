@@ -1,7 +1,7 @@
 object fSettings: TfSettings
-  Left = 595
+  Left = 566
   Height = 397
-  Top = 359
+  Top = 437
   Width = 320
   BorderIcons = []
   BorderStyle = bsSingle
@@ -176,8 +176,8 @@ object fSettings: TfSettings
     Left = 24
     Height = 30
     Top = 352
-    Width = 169
-    Caption = 'Cstom audio alerts,'#13#10'EXPERIMENTAL - Windows only!'
+    Width = 108
+    Caption = 'Custom audio alerts,'#13#10'EXPERIMENTAL!'
     Font.Style = [fsItalic]
     ParentColor = False
     ParentFont = False
