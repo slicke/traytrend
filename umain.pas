@@ -36,7 +36,7 @@ type
     cok, chypo, chyper, csoonhyper: tcolor;
     url, api, lowexec, sndhyper, sndhypo: string;
     mmol, alert, colorval, colortrend, hover: boolean;
-    snooze, arrows, hovertrans: integer;
+    snooze, arrows, hovertrans, updates: integer;
   end;
 
   // Ported from server source code
@@ -288,6 +288,8 @@ begin
      cfg.url := cfgf.GetValue('/remote/url', '');
      cfg.api := cfgf.GetValue('/remote/key', '');
 
+     cfg.updates := cfgf.GetValue('/remote/freq', 300000);
+
      cfg.alert := cfgf.GetValue('/dose/alert', false);
      FormStyle := TFormStyle(cfgf.GetValue('/gui/window', ord(fsNormal)));
 
@@ -310,6 +312,8 @@ begin
   // Since we initially disable things when no config exists, we need to make sure we enable them now
       btnUpdate.Enabled := true;
       btOS.Enabled := true;
+
+      tUpdate.Interval:=cfg.updates;
 
 end;
 
@@ -365,7 +369,7 @@ begin
       btOS.Enabled := false;
   end;
 
-  CheckVesion('v0.2');
+  CheckVesion('v0.3');
 
 end;
 
@@ -421,7 +425,9 @@ begin
   fSettings.rbMmol.Checked := cfg.mmol;
   fSettings.fnHigh.FileName := cfg.sndhyper;
   fSettings.fnLow.FileName := cfg.sndhypo;
+  fSettings.seFreq.Value := round(cfg.updates/60000);
   fSettings.ShowModal;
+  tUpdate.Interval:=cfg.updates;
   LoadCFG;
   btnUpdate.Click;
 end;
