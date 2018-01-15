@@ -13,12 +13,14 @@ type
   { TfHover }
 
   TfHover = class(TForm)
-    imTrend: TImage;
+    lblTrend: TLabel;
     lblVal: TLabel;
+    procedure FormCreate(Sender: TObject);
     procedure FormMouseEnter(Sender: TObject);
     procedure FormMouseLeave(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
+    procedure lblTrendClick(Sender: TObject);
     procedure lblValClick(Sender: TObject);
     procedure lblValMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -48,6 +50,11 @@ procedure TfHover.FormShow(Sender: TObject);
 begin
   self.AlphaBlendValue := trans; // 0..255
   self.AlphaBlend := True;
+
+end;
+
+procedure TfHover.lblTrendClick(Sender: TObject);
+begin
 
 end;
 
@@ -84,6 +91,12 @@ end;
 procedure TfHover.FormMouseEnter(Sender: TObject);
 begin
   self.AlphaBlendValue := 240;
+end;
+
+procedure TfHover.FormCreate(Sender: TObject);
+begin
+    left := screen.Width-width;
+    top := screen.height-height;
 end;
 
 procedure TfHover.FormMouseLeave(Sender: TObject);

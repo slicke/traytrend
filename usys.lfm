@@ -1,7 +1,7 @@
 object fSysSettings: TfSysSettings
-  Left = 950
+  Left = 982
   Height = 481
-  Top = 352
+  Top = 361
   Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
@@ -177,12 +177,12 @@ object fSysSettings: TfSysSettings
     TabOrder = 10
   end
   object cbTrend: TCheckBox
-    Left = 152
+    Left = 154
     Height = 19
     Hint = 'Color the font of the glucose trend'
     Top = 232
-    Width = 80
-    Caption = 'Color trend'
+    Width = 102
+    Caption = 'Color trend text'
     TabOrder = 11
   end
   object Label7: TLabel
@@ -328,5 +328,14 @@ object fSysSettings: TfSysSettings
     Caption = 'under'
     Enabled = False
     ParentColor = False
+  end
+  object cbHoverColor: TCheckBox
+    Left = 40
+    Height = 19
+    Hint = 'Color the font of the glucose trend'
+    Top = 448
+    Width = 92
+    Caption = 'Color reading'
+    TabOrder = 20
   end
 end

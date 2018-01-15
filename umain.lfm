@@ -1,13 +1,13 @@
 object fMain: TfMain
-  Left = 236
-  Height = 186
-  Top = 399
-  Width = 376
+  Left = 861
+  Height = 132
+  Top = 558
+  Width = 357
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'TrayTrend - BETA'
-  ClientHeight = 186
-  ClientWidth = 376
+  ClientHeight = 132
+  ClientWidth = 357
   Color = 15461355
   OnCreate = FormCreate
   OnShow = FormShow
@@ -15,18 +15,18 @@ object fMain: TfMain
   LCLVersion = '1.8.0.6'
   object pnTop: TPanel
     Left = 0
-    Height = 88
+    Height = 72
     Top = 0
-    Width = 376
+    Width = 357
     Align = alTop
     BevelOuter = bvNone
-    ClientHeight = 88
-    ClientWidth = 376
+    ClientHeight = 72
+    ClientWidth = 357
     Color = clWhite
     ParentColor = False
     TabOrder = 0
     object lblVal: TLabel
-      Left = 96
+      Left = 72
       Height = 45
       Top = 8
       Width = 166
@@ -36,11 +36,10 @@ object fMain: TfMain
       ParentFont = False
     end
     object lblTrend: TLabel
-      Left = 0
+      Left = 72
       Height = 15
-      Top = 72
-      Width = 376
-      Align = alBottom
+      Top = 48
+      Width = 185
       Alignment = taCenter
       AutoSize = False
       Caption = '?'
@@ -48,14 +47,14 @@ object fMain: TfMain
       ParentFont = False
     end
     object imTrend: TImage
-      Left = 16
+      Left = 0
       Height = 64
       Top = 0
       Width = 64
       Transparent = True
     end
     object lblSpeed: TLabel
-      Left = 299
+      Left = 282
       Height = 15
       Top = 0
       Width = 64
@@ -65,7 +64,7 @@ object fMain: TfMain
       ParentFont = False
     end
     object lblTimeAgo: TLabel
-      Left = 293
+      Left = 272
       Height = 15
       Top = 16
       Width = 74
@@ -79,8 +78,8 @@ object fMain: TfMain
     object lblSnooze: TLabel
       Left = 0
       Height = 1
-      Top = 87
-      Width = 376
+      Top = 71
+      Width = 357
       Align = alBottom
       Alignment = taCenter
       Font.Color = clGrayText
@@ -88,30 +87,19 @@ object fMain: TfMain
       ParentFont = False
     end
   end
-  object Label1: TLabel
-    Left = 16
-    Height = 28
-    Top = 96
-    Width = 71
-    Caption = 'Settings'
-    Font.Color = 3947580
-    Font.Height = -20
-    ParentColor = False
-    ParentFont = False
-  end
   object btConf: TButton
-    Left = 16
+    Left = 8
     Height = 25
-    Top = 131
+    Top = 80
     Width = 147
     Caption = 'Configure Nightscout'
     OnClick = btConfClick
     TabOrder = 1
   end
   object btOS: TButton
-    Left = 168
+    Left = 160
     Height = 25
-    Top = 131
+    Top = 80
     Width = 192
     Caption = 'Customization Settings'
     OnClick = btOSClick
@@ -120,7 +108,7 @@ object fMain: TfMain
   object Label5: TLabel
     Left = 24
     Height = 15
-    Top = 163
+    Top = 111
     Width = 320
     Caption = 'Not for medical use. See https://github.com/slicke/traytrend'
     Font.Color = 11382189
@@ -128,11 +116,11 @@ object fMain: TfMain
     ParentFont = False
   end
   object btnUpdate: TBitBtn
-    Left = 285
-    Height = 30
-    Top = 96
-    Width = 75
-    Caption = 'Update now'
+    Left = 296
+    Height = 22
+    Top = 40
+    Width = 56
+    Caption = 'Update'
     OnClick = btnUpdateClick
     TabOrder = 3
   end

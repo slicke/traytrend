@@ -9,6 +9,7 @@ object fSettings: TfSettings
   ClientHeight = 397
   ClientWidth = 320
   FormStyle = fsStayOnTop
+  OnCreate = FormCreate
   Position = poMainFormCenter
   LCLVersion = '1.8.0.6'
   object edURL: TEdit

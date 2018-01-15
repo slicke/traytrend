@@ -51,6 +51,7 @@ type
     seFreq: TSpinEdit;
     procedure btnOKClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -96,6 +97,11 @@ begin
 end;
 
 procedure TfSettings.cbrunChange(Sender: TObject);
+begin
+
+end;
+
+procedure TfSettings.FormCreate(Sender: TObject);
 begin
 
 end;

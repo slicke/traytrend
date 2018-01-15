@@ -35,7 +35,7 @@ type
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
     url, api, lowexec, sndhyper, sndhypo: string;
-    mmol, alert, colorval, colortrend, hover: boolean;
+    mmol, alert, colorval, colortrend, hover, hovercolor: boolean;
     snooze, arrows, hovertrans, updates: integer;
   end;
 
@@ -51,7 +51,6 @@ type
     ilBG: TImageList;
     ilFull: TImageList;
     imTrend: TImage;
-    Label1: TLabel;
     lblSnooze: TLabel;
     lblSpeed: TLabel;
     lblTimeAgo: TLabel;
@@ -307,13 +306,14 @@ begin
      FormStyle := TFormStyle(cfgf.GetValue('/gui/window', ord(fsNormal)));
 
      cfg.lowexec := cfgf.GetValue('/system/app', '');
-     cfg.snooze :=  cfgf.GetValue('/gui/snooze', 30);;
-     cfg.sndhyper :=  cfgf.GetValue('/audio/high', '');;
-     cfg.sndhypo :=  cfgf.GetValue('/audio/low', '');;
+     cfg.snooze :=  cfgf.GetValue('/gui/snooze', 30);
+     cfg.sndhyper :=  cfgf.GetValue('/audio/high', '');
+     cfg.sndhypo :=  cfgf.GetValue('/audio/low', '');
 
      cfg.arrows := cfgf.GetValue('/gui/arrows', 1);
-     cfg.hover := cfgf.GetValue('/gui/hover', false);;
-     cfg.hovertrans := cfgf.GetValue('/gui/hovertrans', 100);;
+     cfg.hover := cfgf.GetValue('/gui/hover', false);
+     cfg.hovertrans := cfgf.GetValue('/gui/hovertrans', 100);
+     cfg.hovercolor := cfgf.GetValue('/gui/hovercolor', false);
      cfgf.free;
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
@@ -463,6 +463,7 @@ begin
   fSysSettings.fnRun.FileName:= cfg.lowexec;
   fSysSettings.cbHover.Checked := cfg.hover;
   fSysSettings.seHover.Value := cfg.hovertrans;
+  fSysSettings.cbHoverColor.Checked := cfg.hovercolor;
 
   if cfg.mmol then begin
     fSysSettings.seHigh.DecimalPlaces:=2;
@@ -492,6 +493,9 @@ begin
   // We need to reset these if the color is disabled
   lblTrend.Font.Color:=clDefault;
   lblVal.Font.Color:=clDefault;
+  if assigned(fHover) then
+      fHover.lblVal.Font.Color := clDefault;
+
   LoadCFG;
   UpdateBG;
   FormShow(self);
@@ -531,6 +535,9 @@ begin
      lbl.Font.Color := result;
   if cfg.colorval then
      lblVal.Font.Color := result;
+  if (cfg.hovercolor) and assigned(fHover) then
+     fHover.lblVal.Font.Color := result;
+
   ilBG.GetIcon(i, smallimg);
   ilFull.GetIcon(i, img);
 
@@ -602,8 +609,6 @@ begin
     TempBitMap.Canvas.Brush.Style:=bsSolid;
     bgarrow := tIcon.Create;
     bgcolor := SetUI(bgval, bgtrend, lbltrend, imTrend.Picture.Icon, bgarrow, pnAlert);
-    if assigned(fHover) then
-      fHover.imTrend.Picture.icon := bgarrow;
     TempBitMap.Canvas.Brush.Color := bgcolor;
     TempBitMap.Canvas.FillRect(0, 0, w, h);
     TempBitMap.Canvas.Font:=Canvas.Font;
@@ -620,13 +625,18 @@ begin
     tTray.Icon.Assign(TempBitmap);
     tTray.Show;
 
+    if assigned(fHover) then begin
+      fHover.lblVal.Caption := formatBG(bgval, true);
+      fHover.lblTrend.Caption := lblTrend.Caption;
+    end;
+
   finally
     TempIntfImg.Free;
     TempBitmap.Free;
   end;
   lblVal.caption := formatBG(bgval, false);
-  if assigned(fHover) then
-    fHover.lblVal.Caption := formatBG(bgval, true);
+  lblTrend.Width := lblVal.Width;
+
 end;
 
 {$R *.lfm}

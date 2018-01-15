@@ -37,6 +37,7 @@ type
     cbrun: TCheckBox;
     cbNotice: TCheckBox;
     cbOnTop: TCheckBox;
+    cbHoverColor: TCheckBox;
     cbValue: TCheckBox;
     cbTrend: TCheckBox;
     cbHover: TCheckBox;
@@ -125,6 +126,7 @@ begin
 
      c.SetValue('/gui/hover', cbHover.Checked);
      c.SetValue('/gui/hovertrans', seHover.Value);
+     c.SetValue('/gui/hovercolor', cbHoverColor.Checked);
 
 //     c.SetValue('/dose/alert', cbAlert.Checked);
      if cbOnTop.Checked then

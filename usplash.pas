@@ -31,9 +31,12 @@ type
   { TSplash }
 
   TSplash = class(TForm)
+    Image1: TImage;
     Label1: TLabel;
-    Label2: TLabel;
+    Label3: TLabel;
     Panel1: TPanel;
+    procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
 
   public
@@ -46,6 +49,18 @@ var
 implementation
 
 {$R *.lfm}
+
+{ TSplash }
+
+procedure TSplash.FormCreate(Sender: TObject);
+begin
+
+end;
+
+procedure TSplash.Image1Click(Sender: TObject);
+begin
+
+end;
 
 end.
 
