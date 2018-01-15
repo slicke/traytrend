@@ -2,12 +2,12 @@ object fHover: TfHover
   Left = 825
   Height = 49
   Top = 560
-  Width = 127
+  Width = 144
   BorderIcons = [biSystemMenu]
   BorderStyle = bsNone
   Caption = 'Blood Glucose'
   ClientHeight = 49
-  ClientWidth = 127
+  ClientWidth = 144
   Color = clBlack
   FormStyle = fsSystemStayOnTop
   OnMouseDown = lblValMouseDown
@@ -19,10 +19,10 @@ object fHover: TfHover
   LCLVersion = '1.8.0.6'
   Visible = True
   object lblVal: TLabel
-    Left = 0
+    Left = 24
     Height = 49
     Top = 0
-    Width = 127
+    Width = 120
     Align = alClient
     Alignment = taCenter
     Caption = 'lblVal'
@@ -38,5 +38,16 @@ object fHover: TfHover
     OnMouseLeave = FormMouseLeave
     OnMouseMove = lblValMouseMove
     OnMouseUp = lblValMouseUp
+  end
+  object imTrend: TImage
+    Left = 0
+    Height = 49
+    Top = 0
+    Width = 24
+    AntialiasingMode = amOn
+    Align = alLeft
+    OnMouseDown = lblValMouseDown
+    OnMouseUp = lblValMouseUp
+    Transparent = True
   end
 end

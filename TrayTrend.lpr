@@ -25,7 +25,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, umain, uconfig, usplash, usys, uhover
+  Forms, lazcontrols, umain, uconfig, usplash, usys, uhover
   { you can add units after this };
 
 {$R *.res}

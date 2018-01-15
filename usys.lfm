@@ -36,6 +36,7 @@ object fSysSettings: TfSysSettings
   object cbNotice: TCheckBox
     Left = 16
     Height = 19
+    Hint = 'Pop-up a message on alerts'
     Top = 88
     Width = 133
     Caption = 'Show pop-up notices'
@@ -63,104 +64,89 @@ object fSysSettings: TfSysSettings
     ParentFont = False
   end
   object pnHigh: TPanel
-    Left = 16
+    Left = 256
     Height = 18
-    Top = 121
+    Top = 123
     Width = 18
+    BevelOuter = bvNone
     Color = clBackground
     ParentColor = False
     TabOrder = 4
     OnClick = pnHighClick
   end
   object Label2: TLabel
-    Left = 40
+    Left = 16
     Height = 15
-    Top = 124
+    Top = 123
     Width = 70
     Caption = 'High glucose'
     ParentColor = False
   end
   object Label3: TLabel
-    Left = 40
+    Left = 16
     Height = 15
-    Top = 147
+    Top = 148
     Width = 114
     Caption = 'Close to high glucose'
     ParentColor = False
   end
   object pnSoonHigh: TPanel
-    Left = 16
+    Left = 256
     Height = 18
-    Top = 144
+    Top = 148
     Width = 18
+    BevelOuter = bvNone
     Color = clBackground
     ParentColor = False
     TabOrder = 5
     OnClick = pnHighClick
   end
   object Label4: TLabel
-    Left = 40
+    Left = 16
     Height = 15
-    Top = 171
+    Top = 173
     Width = 61
     Caption = 'OK Glucose'
     ParentColor = False
   end
   object pnOK: TPanel
-    Left = 16
+    Left = 256
     Height = 18
-    Top = 168
+    Top = 173
     Width = 18
+    BevelOuter = bvNone
     Color = clBackground
     ParentColor = False
     TabOrder = 6
     OnClick = pnHighClick
   end
   object Label5: TLabel
-    Left = 40
+    Left = 16
     Height = 15
-    Top = 195
+    Top = 198
     Width = 66
     Caption = 'Low glucose'
     ParentColor = False
   end
   object pnLow: TPanel
-    Left = 16
+    Left = 256
     Height = 18
-    Top = 192
+    Top = 198
     Width = 18
+    BevelOuter = bvNone
     Color = clBackground
     ParentColor = False
     TabOrder = 7
     OnClick = pnHighClick
   end
-  object cbAlert: TCheckBox
-    Left = 16
-    Height = 19
-    Top = 224
-    Width = 291
-    Caption = 'Alert when an insulin dose might have been missed'
-    Enabled = False
-    OnChange = cbAlertChange
-    TabOrder = 8
-  end
-  object Label6: TLabel
-    Left = 40
-    Height = 12
-    Top = 240
-    Width = 277
-    Caption = 'If NightScout lacks insulin data from within 1h, alert if BG is trending up.'
-    Font.Height = -9
-    ParentColor = False
-    ParentFont = False
-  end
   object cbOnTop: TCheckBox
     Left = 16
     Height = 19
+    Hint = 'Don''t allow the main window to be placed behind other apps'
     Top = 264
     Width = 186
     Caption = 'Try to stay on top of other apps'
-    TabOrder = 9
+    TabOrder = 8
   end
   object tbSnooze: TTrackBar
     Left = 16
@@ -171,31 +157,33 @@ object fSysSettings: TfSysSettings
     OnChange = tbSnoozeChange
     Position = 0
     TickMarks = tmTopLeft
-    TabOrder = 10
+    TabOrder = 9
   end
   object lblSnooze: TLabel
     Left = 16
     Height = 15
-    Top = 296
+    Top = 288
     Width = 78
     Caption = 'Snoooze time: '
     ParentColor = False
   end
   object cbValue: TCheckBox
-    Left = 188
+    Left = 16
     Height = 19
-    Top = 147
+    Hint = 'Color the font of the glucose reading'
+    Top = 232
     Width = 124
     Caption = 'Color glucose value'
-    TabOrder = 11
+    TabOrder = 10
   end
   object cbTrend: TCheckBox
-    Left = 188
+    Left = 152
     Height = 19
-    Top = 168
+    Hint = 'Color the font of the glucose trend'
+    Top = 232
     Width = 80
     Caption = 'Color trend'
-    TabOrder = 12
+    TabOrder = 11
   end
   object Label7: TLabel
     Left = 16
@@ -208,40 +196,44 @@ object fSysSettings: TfSysSettings
   object cbArrowLeft: TRadioButton
     Left = 24
     Height = 19
+    Hint = 'The pointy end of the trend arrow is always left'
     Top = 368
     Width = 65
     Caption = 'Both left'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
-    TabOrder = 13
+    TabOrder = 12
   end
   object cbArrowRight: TRadioButton
     Left = 104
     Height = 19
+    Hint = 'The pointy end of the trend arrow is always right'
     Top = 368
     Width = 73
     Caption = 'Both right'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
-    TabOrder = 14
+    TabOrder = 13
   end
   object cbArrowMix: TRadioButton
     Left = 184
     Height = 19
+    Hint = 'The pointy end of the trend arrow is right when glucose is high, left when low'
     Top = 368
     Width = 119
     Caption = 'High right, low left'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
-    TabOrder = 15
+    TabOrder = 14
   end
   object cbHover: TCheckBox
     Left = 16
     Height = 19
+    Hint = 'Show a semi-transparent discrete window with glucose info, which you can drag over the screen'
     Top = 400
     Width = 127
     Caption = 'Show hover window'
-    TabOrder = 16
+    TabOrder = 15
   end
   object Label8: TLabel
     Left = 40
@@ -257,6 +249,84 @@ object fSysSettings: TfSysSettings
     Top = 422
     Width = 58
     MaxValue = 255
+    TabOrder = 16
+  end
+  object seHigh: TFloatSpinEditEx
+    Left = 184
+    Height = 23
+    Top = 121
+    Width = 64
+    MaxLength = 0
+    NumbersOnly = True
     TabOrder = 17
+    DecimalPlaces = 0
+    Increment = 1
+    MaxValue = 500
+    MinValue = 0
+    MinRepeatValue = 0
+    NullValue = 0
+    NullValueBehaviour = nvbInitialValue
+    Value = 0
+  end
+  object seOK: TFloatSpinEditEx
+    Left = 184
+    Height = 23
+    Top = 171
+    Width = 64
+    MaxLength = 0
+    NumbersOnly = True
+    TabOrder = 18
+    DecimalPlaces = 0
+    Increment = 1
+    MaxValue = 500
+    MinValue = 0
+    MinRepeatValue = 0
+    NullValue = 0
+    NullValueBehaviour = nvbInitialValue
+    Value = 0
+  end
+  object seLow: TFloatSpinEditEx
+    Left = 184
+    Height = 23
+    Top = 196
+    Width = 64
+    MaxLength = 0
+    NumbersOnly = True
+    TabOrder = 19
+    DecimalPlaces = 0
+    Increment = 1
+    MaxValue = 500
+    MinValue = 0
+    MinRepeatValue = 0
+    NullValue = 0
+    NullValueBehaviour = nvbInitialValue
+    Value = 0
+  end
+  object Label6: TLabel
+    Left = 184
+    Height = 15
+    Top = 149
+    Width = 56
+    Caption = 'Calculated'
+    Enabled = False
+    ParentColor = False
+  end
+  object Label9: TLabel
+    Left = 154
+    Height = 15
+    Top = 124
+    Width = 23
+    Caption = 'over'
+    Enabled = False
+    ParentColor = False
+  end
+  object Label10: TLabel
+    Left = 146
+    Height = 15
+    Top = 199
+    Width = 31
+    Caption = 'under'
+    Enabled = False
+    ParentColor = False
   end
 end

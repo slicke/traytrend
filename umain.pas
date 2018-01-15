@@ -83,6 +83,7 @@ type
   private
     procedure fetchValues;
     function CheckVesion(current: string): boolean;
+    function DoNSReq(metric: string): TJSONData;
   public
     procedure UpdateBG;
     function SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
@@ -135,9 +136,10 @@ begin
 end;
 
 // Fetch version data from GitHub
-function DoNSReq(metric: string): TJSONData;
+function tfMain.DoNSReq(metric: string): TJSONData;
 var
   ans : string;
+  code: integer;
 begin
   try
    with TFPHTTPClient.Create(nil) do
@@ -146,10 +148,16 @@ begin
      ans := Get(cfg.url + '/api/v1/'+metric+'.json');
      result := GetJSON(ans);
    finally
+     code := ResponseStatusCode;
      Free;
    end;
   except
-    on E: Exception do ShowMessage('A netowork error occured: ' + E.Message + ListSeparator + 'A new attempt will be made on the next schedule ');
+    on E: Exception do begin
+    if code = 401 then
+      ShowMessage('Your API token appears to be wrong, or Nightscout is having problems at this time (hosted on Heroku?) and should return in a few moments.')
+    else
+       ShowMessage('A netowork error occured: ' + E.Message + ListSeparator + 'A new attempt will be made on the next schedule ');
+    end;
   end;
 end;
 // Fetch a JSON resource form Nightscout
@@ -188,9 +196,14 @@ begin
   Application.ProcessMessages;
   res := DoNSReq('entries');
 
+
   // Go through all resturned values in reverse order, so we enter them in chronological order
   for i := res.Count-1 downto 0 do begin
     val := res.Items[i];
+
+    if val.findpath('type').AsString <> 'sgv' then
+      Continue;
+
     lastbg := bgval;
     bgval := val.findpath('sgv').AsInteger;
     ts := val.findpath('date').AsInt64;
@@ -439,7 +452,7 @@ begin
   fSysSettings.pnLow.Color := cfg.chypo;
   fSysSettings.pnSoonHigh.Color := cfg.csoonhyper;
   fSysSettings.pnHigh.Color := cfg.chyper;
-  fSysSettings.cbAlert.Checked := cfg.alert;
+//  fSysSettings.cbAlert.Checked := cfg.alert;
   fSysSettings.cbOnTop.Checked := (self.FormStyle = fsSystemStayOnTop);
   fSysSettings.tbSnooze.Position :=  cfg.snooze;
   fSysSettings.lblSnooze.Caption := 'Snooze time: ' + IntToStr(cfg.snooze) + ' minutes';
@@ -450,6 +463,23 @@ begin
   fSysSettings.fnRun.FileName:= cfg.lowexec;
   fSysSettings.cbHover.Checked := cfg.hover;
   fSysSettings.seHover.Value := cfg.hovertrans;
+
+  if cfg.mmol then begin
+    fSysSettings.seHigh.DecimalPlaces:=2;
+    fSysSettings.selOW.DecimalPlaces:=2;
+    fSysSettings.seok.DecimalPlaces:=2;
+    fSysSettings.seHigh.value:= convertBG(cfg.hyper, false);
+    fSysSettings.selOW.value:=convertBG(cfg.hypo, false);
+    fSysSettings.seok.value:=convertBG(cfg.ok, false);
+  end else begin
+    fSysSettings.seHigh.DecimalPlaces:=0;
+    fSysSettings.selOW.DecimalPlaces:=0;
+    fSysSettings.seok.DecimalPlaces:=0;
+    fSysSettings.seHigh.value:=cfg.hyper;
+    fSysSettings.selOW.value:=cfg.hypo;
+    fSysSettings.seok.value:=cfg.ok;
+  end;
+
 
   if cfg.arrows = 1 then
      fSysSettings.cbArrowRight.Checked:=true
@@ -572,6 +602,8 @@ begin
     TempBitMap.Canvas.Brush.Style:=bsSolid;
     bgarrow := tIcon.Create;
     bgcolor := SetUI(bgval, bgtrend, lbltrend, imTrend.Picture.Icon, bgarrow, pnAlert);
+    if assigned(fHover) then
+      fHover.imTrend.Picture.icon := bgarrow;
     TempBitMap.Canvas.Brush.Color := bgcolor;
     TempBitMap.Canvas.FillRect(0, 0, w, h);
     TempBitMap.Canvas.Font:=Canvas.Font;

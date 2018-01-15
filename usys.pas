@@ -23,8 +23,8 @@ unit usys;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, EditBtn,
-  StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf;
+  Classes, SysUtils, FileUtil, SpinEx, Forms, Controls, Graphics, Dialogs,
+  EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf;
 
 type
 
@@ -36,18 +36,20 @@ type
     cbArrowMix: TRadioButton;
     cbrun: TCheckBox;
     cbNotice: TCheckBox;
-    cbAlert: TCheckBox;
     cbOnTop: TCheckBox;
     cbValue: TCheckBox;
     cbTrend: TCheckBox;
     cbHover: TCheckBox;
+    Label10: TLabel;
+    Label6: TLabel;
+    Label9: TLabel;
+    seHigh: TFloatSpinEditEx;
     fnRun: TFileNameEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
-    Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     lblSnooze: TLabel;
@@ -56,6 +58,8 @@ type
     pnOK: TPanel;
     pnLow: TPanel;
     cbArrowLeft: TRadioButton;
+    seOK: TFloatSpinEditEx;
+    seLow: TFloatSpinEditEx;
     seHover: TSpinEdit;
     tbSnooze: TTrackBar;
     procedure btnOKClick(Sender: TObject);
@@ -108,7 +112,7 @@ begin
      c.SetValue('/glucose/value', cbValue.Checked);
      c.SetValue('/glucose/trend', cbTrend.Checked);
 
-     t := c.GetValue('/gui/arrows', 0);
+//     t := c.GetValue('/gui/arrows', 0);
      if cbArrowRight.Checked then
        c.setValue('/gui/arrows', 1)
      else if cbArrowLeft.Checked then
@@ -122,11 +126,21 @@ begin
      c.SetValue('/gui/hover', cbHover.Checked);
      c.SetValue('/gui/hovertrans', seHover.Value);
 
-     c.SetValue('/dose/alert', cbAlert.Checked);
+//     c.SetValue('/dose/alert', cbAlert.Checked);
      if cbOnTop.Checked then
           c.SetValue('/gui/window', ord(fsSystemStayOnTop))
      else
           c.SetValue('/gui/window', ord(fsNormal));
+
+  if seHigh.DecimalPlaces > 0 then begin
+    c.SetValue('/glucose/high', round(seHigh.Value * 18));
+    c.SetValue('/glucose/low', round(seLow.Value * 18));
+    c.SetValue('/glucose/ok', round(seOK.Value * 18));
+  end else begin
+     c.SetValue('/glucose/high', round(seHigh.Value));
+     c.SetValue('/glucose/low', round(seLow.Value));
+     c.SetValue('/glucose/ok', round(seOk.Value));
+  end;
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
     [mbOK],0);
