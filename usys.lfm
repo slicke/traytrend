@@ -1,18 +1,18 @@
 object fSysSettings: TfSysSettings
-  Left = 982
+  Left = 726
   Height = 481
-  Top = 361
-  Width = 320
+  Top = 236
+  Width = 335
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
   ClientHeight = 481
-  ClientWidth = 320
+  ClientWidth = 335
   Position = poMainFormCenter
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.8.0.4'
   object fnRun: TFileNameEdit
     Left = 40
-    Height = 23
+    Height = 26
     Top = 64
     Width = 256
     FilterIndex = 0
@@ -21,45 +21,54 @@ object fSysSettings: TfSysSettings
     ButtonWidth = 100
     NumGlyphs = 1
     Enabled = False
+    Font.Name = 'Ubuntu'
     MaxLength = 0
+    ParentFont = False
     TabOrder = 0
   end
   object cbrun: TCheckBox
     Left = 16
-    Height = 19
+    Height = 24
     Top = 40
-    Width = 284
+    Width = 348
     Caption = 'Run program/command when low (<2.9 mmol/L)'
+    Font.Name = 'Ubuntu'
     OnChange = cbrunChange
+    ParentFont = False
     TabOrder = 1
   end
   object cbNotice: TCheckBox
     Left = 16
-    Height = 19
+    Height = 24
     Hint = 'Pop-up a message on alerts'
     Top = 88
-    Width = 133
+    Width = 165
     Caption = 'Show pop-up notices'
     Checked = True
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     State = cbChecked
     TabOrder = 2
   end
   object btnOK: TButton
-    Left = 221
+    Left = 248
     Height = 25
-    Top = 448
+    Top = 447
     Width = 75
     Caption = '&OK'
+    Font.Name = 'Ubuntu'
     OnClick = btnOKClick
+    ParentFont = False
     TabOrder = 3
   end
   object Label1: TLabel
     Left = 16
-    Height = 21
+    Height = 19
     Top = 8
-    Width = 118
+    Width = 122
     Caption = 'Optional settings'
     Font.Height = -16
+    Font.Name = 'Ubuntu'
     ParentColor = False
     ParentFont = False
   end
@@ -70,25 +79,31 @@ object fSysSettings: TfSysSettings
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
     TabOrder = 4
     OnClick = pnHighClick
   end
   object Label2: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 123
-    Width = 70
+    Width = 78
     Caption = 'High glucose'
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object Label3: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 148
-    Width = 114
+    Width = 129
     Caption = 'Close to high glucose'
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object pnSoonHigh: TPanel
     Left = 256
@@ -97,17 +112,21 @@ object fSysSettings: TfSysSettings
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
     TabOrder = 5
     OnClick = pnHighClick
   end
   object Label4: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 173
-    Width = 61
+    Width = 69
     Caption = 'OK Glucose'
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object pnOK: TPanel
     Left = 256
@@ -116,17 +135,21 @@ object fSysSettings: TfSysSettings
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
     TabOrder = 6
     OnClick = pnHighClick
   end
   object Label5: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 198
-    Width = 66
+    Width = 75
     Caption = 'Low glucose'
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object pnLow: TPanel
     Left = 256
@@ -135,129 +158,162 @@ object fSysSettings: TfSysSettings
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
     TabOrder = 7
     OnClick = pnHighClick
   end
   object cbOnTop: TCheckBox
     Left = 16
-    Height = 19
+    Height = 24
     Hint = 'Don''t allow the main window to be placed behind other apps'
     Top = 264
-    Width = 186
+    Width = 236
     Caption = 'Try to stay on top of other apps'
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 8
   end
   object tbSnooze: TTrackBar
     Left = 16
-    Height = 25
+    Height = 46
     Top = 312
-    Width = 280
+    Width = 309
     Max = 90
     OnChange = tbSnoozeChange
     Position = 0
     TickMarks = tmTopLeft
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 9
   end
   object lblSnooze: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 288
-    Width = 78
+    Width = 87
     Caption = 'Snoooze time: '
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object cbValue: TCheckBox
     Left = 16
-    Height = 19
+    Height = 24
     Hint = 'Color the font of the glucose reading'
     Top = 232
-    Width = 124
+    Width = 155
     Caption = 'Color glucose value'
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 10
   end
   object cbTrend: TCheckBox
-    Left = 154
-    Height = 19
+    Left = 184
+    Height = 24
     Hint = 'Color the font of the glucose trend'
     Top = 232
-    Width = 102
+    Width = 122
     Caption = 'Color trend text'
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 11
   end
   object Label7: TLabel
     Left = 16
-    Height = 15
+    Height = 16
     Top = 352
-    Width = 65
+    Width = 74
     Caption = 'Arrows face:'
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object cbArrowLeft: TRadioButton
     Left = 24
-    Height = 19
+    Height = 24
     Hint = 'The pointy end of the trend arrow is always left'
     Top = 368
-    Width = 65
+    Width = 69
     Caption = 'Both left'
+    Checked = True
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
+    ParentFont = False
     TabOrder = 12
+    TabStop = True
   end
   object cbArrowRight: TRadioButton
     Left = 104
-    Height = 19
+    Height = 24
     Hint = 'The pointy end of the trend arrow is always right'
     Top = 368
-    Width = 73
+    Width = 75
     Caption = 'Both right'
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
+    ParentFont = False
     TabOrder = 13
   end
   object cbArrowMix: TRadioButton
     Left = 184
-    Height = 19
+    Height = 24
     Hint = 'The pointy end of the trend arrow is right when glucose is high, left when low'
     Top = 368
     Width = 119
     Caption = 'High right, low left'
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     OnChange = cbArrowLeftChange
     OnClick = cbArrowLeftClick
+    ParentFont = False
     TabOrder = 14
   end
   object cbHover: TCheckBox
     Left = 16
-    Height = 19
+    Height = 24
     Hint = 'Show a semi-transparent discrete window with glucose info, which you can drag over the screen'
     Top = 400
-    Width = 127
+    Width = 158
     Caption = 'Show hover window'
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 15
   end
   object Label8: TLabel
     Left = 40
-    Height = 15
+    Height = 16
     Top = 424
-    Width = 76
+    Width = 87
     Caption = 'Transparency: '
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object seHover: TSpinEdit
     Left = 127
-    Height = 23
+    Height = 26
     Top = 422
     Width = 58
+    Font.Name = 'Ubuntu'
     MaxValue = 255
+    ParentFont = False
     TabOrder = 16
   end
   object seHigh: TFloatSpinEditEx
     Left = 184
-    Height = 23
+    Height = 26
     Top = 121
     Width = 64
+    Font.Name = 'Ubuntu'
     MaxLength = 0
     NumbersOnly = True
+    ParentFont = False
     TabOrder = 17
     DecimalPlaces = 0
     Increment = 1
@@ -270,11 +326,13 @@ object fSysSettings: TfSysSettings
   end
   object seOK: TFloatSpinEditEx
     Left = 184
-    Height = 23
+    Height = 26
     Top = 171
     Width = 64
+    Font.Name = 'Ubuntu'
     MaxLength = 0
     NumbersOnly = True
+    ParentFont = False
     TabOrder = 18
     DecimalPlaces = 0
     Increment = 1
@@ -287,11 +345,13 @@ object fSysSettings: TfSysSettings
   end
   object seLow: TFloatSpinEditEx
     Left = 184
-    Height = 23
+    Height = 26
     Top = 196
     Width = 64
+    Font.Name = 'Ubuntu'
     MaxLength = 0
     NumbersOnly = True
+    ParentFont = False
     TabOrder = 19
     DecimalPlaces = 0
     Increment = 1
@@ -304,38 +364,49 @@ object fSysSettings: TfSysSettings
   end
   object Label6: TLabel
     Left = 184
-    Height = 15
-    Top = 149
-    Width = 56
+    Height = 14
+    Top = 150
+    Width = 52
     Caption = 'Calculated'
     Enabled = False
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object Label9: TLabel
-    Left = 154
-    Height = 15
-    Top = 124
-    Width = 23
+    Left = 157
+    Height = 14
+    Top = 128
+    Width = 22
     Caption = 'over'
     Enabled = False
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object Label10: TLabel
-    Left = 146
-    Height = 15
-    Top = 199
-    Width = 31
+    Left = 151
+    Height = 14
+    Top = 200
+    Width = 28
     Caption = 'under'
     Enabled = False
+    Font.Height = -11
+    Font.Name = 'Ubuntu'
     ParentColor = False
+    ParentFont = False
   end
   object cbHoverColor: TCheckBox
     Left = 40
-    Height = 19
+    Height = 24
     Hint = 'Color the font of the glucose trend'
     Top = 448
-    Width = 92
+    Width = 117
     Caption = 'Color reading'
+    Font.Name = 'Ubuntu'
+    ParentFont = False
     TabOrder = 20
   end
 end

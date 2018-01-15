@@ -17,7 +17,7 @@ object fHover: TfHover
   OnMouseMove = lblValMouseMove
   OnMouseUp = lblValMouseUp
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.8.0.4'
   Visible = True
   object lblVal: TLabel
     Left = 0
@@ -29,6 +29,7 @@ object fHover: TfHover
     Caption = 'lblVal'
     Font.Color = clWhite
     Font.Height = -33
+    Font.Name = 'Ubuntu'
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
@@ -48,6 +49,7 @@ object fHover: TfHover
     Align = alBottom
     Alignment = taCenter
     Font.Color = 15921906
+    Font.Name = 'Ubuntu'
     ParentColor = False
     ParentFont = False
     OnClick = lblTrendClick

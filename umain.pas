@@ -45,8 +45,8 @@ type
   { TfMain }
 
   TfMain = class(TForm)
-    btnUpdate: TBitBtn;
     btConf: TButton;
+    btnUpdate: TBitBtn;
     btOS: TButton;
     ilBG: TImageList;
     ilFull: TImageList;
