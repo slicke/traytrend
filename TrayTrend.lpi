@@ -144,6 +144,7 @@
         <Filename Value="uhover.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fHover"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit6>
     </Units>

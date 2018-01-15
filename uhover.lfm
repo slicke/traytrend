@@ -4,12 +4,17 @@ object fHover: TfHover
   Top = 612
   Width = 127
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsToolWindow
+  BorderStyle = bsNone
   Caption = 'Blood Glucose'
   ClientHeight = 49
   ClientWidth = 127
   Color = clBlack
   FormStyle = fsSystemStayOnTop
+  OnMouseDown = lblValMouseDown
+  OnMouseEnter = FormMouseEnter
+  OnMouseLeave = FormMouseLeave
+  OnMouseMove = lblValMouseMove
+  OnMouseUp = lblValMouseUp
   OnShow = FormShow
   LCLVersion = '1.8.0.6'
   Visible = True
@@ -26,5 +31,10 @@ object fHover: TfHover
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+    OnMouseDown = lblValMouseDown
+    OnMouseEnter = FormMouseEnter
+    OnMouseLeave = FormMouseLeave
+    OnMouseMove = lblValMouseMove
+    OnMouseUp = lblValMouseUp
   end
 end

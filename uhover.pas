@@ -13,7 +13,16 @@ type
 
   TfHover = class(TForm)
     lblVal: TLabel;
+    procedure FormMouseEnter(Sender: TObject);
+    procedure FormMouseLeave(Sender: TObject);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure FormShow(Sender: TObject);
+    procedure lblValMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure lblValMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure lblValMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
 
   public
@@ -23,6 +32,8 @@ type
 
 var
   fHover: TfHover;
+  mdown: boolean;
+  PX, PY: integer;
 
 implementation
 
@@ -34,6 +45,46 @@ procedure TfHover.FormShow(Sender: TObject);
 begin
   self.AlphaBlendValue := trans; // 0..255
   self.AlphaBlend := True;
+
+end;
+
+procedure TfHover.lblValMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbLeft then begin
+    mdown := True;
+    PX := X;
+    PY := Y;
+  end;
+end;
+
+procedure TfHover.lblValMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if mdown then begin
+    SetBounds(Left + (X - PX), Top + (Y - PY), Width, Height);
+  end;
+end;
+
+procedure TfHover.lblValMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  mdown :=False;
+end;
+
+procedure TfHover.FormMouseEnter(Sender: TObject);
+begin
+  self.AlphaBlendValue := 240;
+end;
+
+procedure TfHover.FormMouseLeave(Sender: TObject);
+begin
+    self.AlphaBlendValue := trans;
+end;
+
+procedure TfHover.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
 
 end;
 
