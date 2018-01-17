@@ -24,8 +24,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  intfgraphics, lazcanvas, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
-  fpImage, math, fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
+  intfgraphics, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
+  fpImage,  fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
   lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem {$endif};
 
 type
@@ -35,7 +35,7 @@ type
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
     url, api, lowexec, sndhyper, sndhypo: string;
-    mmol, alert, colorval, colortrend, hover, hovercolor: boolean;
+    mmol, alert, colorval, colortrend, hover, hovercolor, hoverwindowcolor: boolean;
     snooze, arrows, hovertrans, updates: integer;
   end;
 
@@ -156,7 +156,7 @@ begin
     if code = 401 then
       ShowMessage('Your API token appears to be wrong, or Nightscout is having problems at this time (hosted on Heroku?) and should return in a few moments.')
     else
-       ShowMessage('A netowork error occured: ' + E.Message + ListSeparator + 'A new attempt will be made on the next schedule ');
+       ShowMessage('A netowork error occured: ' + E.Message + LineEnding + 'A new attempt will be made on the next schedule ');
     end;
   end;
 end;
@@ -315,6 +315,7 @@ begin
      cfg.hover := cfgf.GetValue('/gui/hover', false);
      cfg.hovertrans := cfgf.GetValue('/gui/hovertrans', 100);
      cfg.hovercolor := cfgf.GetValue('/gui/hovercolor', false);
+     cfg.hoverwindowcolor := cfgf.GetValue('/gui/hoverwindowcolor', false);
      cfgf.free;
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
@@ -355,9 +356,6 @@ begin
 end;
 
 procedure TfMain.FormCreate(Sender: TObject);
-var
-  src, dest: trect;
-  i: integer;
 begin
   // Make sure the splash is showing
   Application.ProcessMessages;
@@ -474,6 +472,7 @@ begin
   fSysSettings.cbHover.Checked := cfg.hover;
   fSysSettings.seHover.Value := cfg.hovertrans;
   fSysSettings.cbHoverColor.Checked := cfg.hovercolor;
+  fSysSettings.cbHoverWindowColor.Checked := cfg.hoverwindowcolor;
 
   if cfg.mmol then begin
     fSysSettings.seHigh.DecimalPlaces:=2;
@@ -503,12 +502,33 @@ begin
   // We need to reset these if the color is disabled
   lblTrend.Font.Color:=clDefault;
   lblVal.Font.Color:=clDefault;
-  if assigned(fHover) then
-      fHover.lblVal.Font.Color := clDefault;
 
   LoadCFG;
   UpdateBG;
   FormShow(self);
+end;
+
+function GetHoverColor(const AColor: TColor): TColor;
+var
+  R, G, B: single;
+begin
+  R := GetRValue(AColor) * 0.25;
+  G := GetGValue(AColor) * 0.625;
+  B := GetBValue(AColor) * 0.125;
+
+  if (R + G + B) > 128 then begin
+    result := clBlack;
+  end else begin
+    result := clWhite;
+  end;
+end;
+
+function GetHoverTrendColor(const AColor: Tcolor): TColor;
+begin
+  if acolor = clWhite then
+      result := $00F2F2F2
+  else
+      result := $00484848;
 end;
 
 // Figure out which image to show when the trend changes and the name
@@ -541,12 +561,23 @@ begin
   i := ord(dir);
   // Fix GUI things
   result := GetBGColor(bgval);
+  if assigned(fHover) then
+  fHover.lblTrend.Font.Color := $00F2F2F2;
   if cfg.colortrend then
      lbl.Font.Color := result;
   if cfg.colorval then
      lblVal.Font.Color := result;
-  if (cfg.hovercolor) and assigned(fHover) then
+  if (cfg.hoverwindowcolor) and assigned(fHover) then begin
+     fHover.Color := result;
+//     if (cfg.colorval) then begin
+        fHover.lblVal.Font.Color := GetHoverColor(result);
+        fHover.lblTrend.Font.Color := GetHoverTrendColor(result);
+  //   end;
+  end else if (cfg.hovercolor) and assigned(fHover) then begin
      fHover.lblVal.Font.Color := result;
+     fHover.Color:=clBlack;
+  end;
+
 
   ilBG.GetIcon(i, smallimg);
   ilFull.GetIcon(i, img);
@@ -597,7 +628,7 @@ procedure TfMain.UpdateBG;
   var
   TempIntfImg: TLazIntfImage;
   ImgHandle, ImgMaskHandle: HBitmap;
-  px, py, w, h: Integer;
+  w, h: Integer;
   TempBitmap: TBitmap;
   bgarrow: ticon;
   bgcolor: tcolor;

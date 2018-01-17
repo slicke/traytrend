@@ -34,6 +34,7 @@ type
     btnOK: TButton;
     cbArrowRight: TRadioButton;
     cbArrowMix: TRadioButton;
+    cbHoverWindowColor: TCheckBox;
     cbrun: TCheckBox;
     cbNotice: TCheckBox;
     cbOnTop: TCheckBox;
@@ -127,6 +128,7 @@ begin
      c.SetValue('/gui/hover', cbHover.Checked);
      c.SetValue('/gui/hovertrans', seHover.Value);
      c.SetValue('/gui/hovercolor', cbHoverColor.Checked);
+     c.SetValue('/gui/hoverwindowcolor', cbHoverWindowColor.Checked);
 
 //     c.SetValue('/dose/alert', cbAlert.Checked);
      if cbOnTop.Checked then

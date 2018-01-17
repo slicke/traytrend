@@ -1,12 +1,12 @@
 object fSysSettings: TfSysSettings
   Left = 982
-  Height = 481
+  Height = 513
   Top = 361
   Width = 320
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
-  ClientHeight = 481
+  ClientHeight = 513
   ClientWidth = 320
   Position = poMainFormCenter
   LCLVersion = '1.8.0.6'
@@ -45,9 +45,9 @@ object fSysSettings: TfSysSettings
     TabOrder = 2
   end
   object btnOK: TButton
-    Left = 221
+    Left = 232
     Height = 25
-    Top = 448
+    Top = 480
     Width = 75
     Caption = '&OK'
     OnClick = btnOKClick
@@ -333,9 +333,18 @@ object fSysSettings: TfSysSettings
     Left = 40
     Height = 19
     Hint = 'Color the font of the glucose trend'
-    Top = 448
+    Top = 451
     Width = 92
     Caption = 'Color reading'
     TabOrder = 20
+  end
+  object cbHoverWindowColor: TCheckBox
+    Left = 168
+    Height = 19
+    Hint = 'Color the font of the glucose trend'
+    Top = 451
+    Width = 94
+    Caption = 'Color window'
+    TabOrder = 21
   end
 end

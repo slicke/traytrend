@@ -49,7 +49,7 @@ object fHover: TfHover
     Width = 120
     Align = alBottom
     Alignment = taCenter
-    Font.Color = 15921906
+    Font.Color = clBlack
     ParentColor = False
     ParentFont = False
     PopupMenu = fMain.pnMain
