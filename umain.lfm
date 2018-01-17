@@ -11,6 +11,7 @@ object fMain: TfMain
   Color = 15461355
   OnCreate = FormCreate
   OnShow = FormShow
+  OnWindowStateChange = FormWindowStateChange
   Position = poScreenCenter
   LCLVersion = '1.8.0.6'
   object pnTop: TPanel

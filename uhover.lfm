@@ -11,6 +11,7 @@ object fHover: TfHover
   Color = clBlack
   FormStyle = fsSystemStayOnTop
   OnCreate = FormCreate
+  OnDblClick = FormDblClick
   OnMouseDown = lblValMouseDown
   OnMouseEnter = FormMouseEnter
   OnMouseLeave = FormMouseLeave
@@ -34,6 +35,7 @@ object fHover: TfHover
     ParentFont = False
     PopupMenu = fMain.pnMain
     OnClick = lblValClick
+    OnDblClick = FormDblClick
     OnMouseDown = lblValMouseDown
     OnMouseEnter = FormMouseEnter
     OnMouseLeave = FormMouseLeave
@@ -50,7 +52,9 @@ object fHover: TfHover
     Font.Color = 15921906
     ParentColor = False
     ParentFont = False
+    PopupMenu = fMain.pnMain
     OnClick = lblTrendClick
+    OnDblClick = FormDblClick
     OnMouseDown = lblValMouseDown
     OnMouseEnter = FormMouseEnter
     OnMouseLeave = FormMouseLeave

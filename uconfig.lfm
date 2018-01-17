@@ -1,7 +1,7 @@
 object fSettings: TfSettings
-  Left = 558
+  Left = 630
   Height = 397
-  Top = 405
+  Top = 455
   Width = 320
   BorderIcons = []
   BorderStyle = bsSingle

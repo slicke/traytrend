@@ -73,6 +73,7 @@ type
     procedure btOSClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
@@ -395,6 +396,15 @@ begin
      fHover.trans := cfg.hovertrans;
      fHover.Visible:=true;
      fHover.lblVal.Caption := formatBG(bgval, true);
+  end;
+end;
+
+procedure TfMain.FormWindowStateChange(Sender: TObject);
+begin
+  if (assigned(fhover)) and (WindowState = wsMinimized) then begin
+     WindowState := wsNormal;
+     Hide;
+     ShowMessage('Double-click the floating window to show TrayTrend again!');
   end;
 end;
 

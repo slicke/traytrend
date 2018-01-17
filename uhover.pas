@@ -16,6 +16,7 @@ type
     lblTrend: TLabel;
     lblVal: TLabel;
     procedure FormCreate(Sender: TObject);
+    procedure FormDblClick(Sender: TObject);
     procedure FormMouseEnter(Sender: TObject);
     procedure FormMouseLeave(Sender: TObject);
     procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -97,6 +98,11 @@ procedure TfHover.FormCreate(Sender: TObject);
 begin
     left := screen.Width-width;
     top := screen.height-height;
+end;
+
+procedure TfHover.FormDblClick(Sender: TObject);
+begin
+  lblVal.PopupMenu.Items[0].Click;
 end;
 
 procedure TfHover.FormMouseLeave(Sender: TObject);
