@@ -381,7 +381,7 @@ begin
       btOS.Enabled := false;
   end;
 
-  CheckVesion('v0.3');
+  CheckVesion('v0.31');
 
 end;
 
