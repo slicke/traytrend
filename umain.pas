@@ -82,7 +82,7 @@ type
     procedure updateTrend(velocity: single; desc, device: string; newdate: tdatetime);
   private
     procedure fetchValues;
-    function CheckVesion(current: string): boolean;
+    function CheckVesion(current: Single; prerelease: boolean): boolean;
     function DoNSReq(metric: string): TJSONData;
   public
     procedure UpdateBG;
@@ -161,23 +161,33 @@ begin
   end;
 end;
 // Fetch a JSON resource form Nightscout
-function tfMain.CheckVesion(current: string): boolean;
+function tfMain.CheckVesion(current: Single; prerelease: boolean): boolean;
 var
-  ans : string;
+  ans, ver : string;
   res:TJSONData;
+  tmpfs: TFormatSettings;
 begin
 //     res := GetJSON(ans);
+  tmpfs.DecimalSeparator := '.';
+  ver := FloatToStrF(current, ffGeneral, 3, 3, tmpfs);
+
+  if not prerelease then
+    ver := 'v'+ver;
+
   with TFPHTTPClient.Create(nil) do begin
-   AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb)');                       // We don't get any result without the user agent seet
-   ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases');
+   AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb) TrayTrend/'+ver);                       // We don't get any result without the user agent seet
+   ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases/latest');
   end;
   if ans = '' then
     Exit;
 
+  if not prerelease then // So we dont have to parse differently
+    ans := '['+ans+']';
+
   try
     res := GetJSON(ans);
-    if res.Items[0].FindPath('tag_name').AsString <> current then
-          if MessageDlg('Update available', 'A new version is available!'+LineEnding+'Version ' + res.Items[0].FindPath('tag_name').AsString+' has been released. This is version '+current+LineEnding+LineEnding+'Would you like to read about the new version?', mtConfirmation,  [mbYes, mbNo], 0) = mrYes then
+    if (res.Items[0].FindPath('tag_name').AsString <> ver) then
+          if MessageDlg('New version released', 'A new version of TrayTrend is available!'+LineEnding+LineEnding+'TrayTrend ' + res.Items[0].FindPath('tag_name').AsString+' has been released. You are currently using '+ver+'.'+LineEnding+'Would you like to get information about the new version?', mtConfirmation,  [mbYes, mbNo], 0) = mrYes then
                openurl(res.Items[0].FindPath('html_url').AsString);
   finally
   end;
@@ -381,7 +391,7 @@ begin
       btOS.Enabled := false;
   end;
 
-  CheckVesion('v0.31');
+  CheckVesion(0.31, false);
 
 end;
 
