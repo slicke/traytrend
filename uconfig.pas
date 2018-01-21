@@ -32,12 +32,16 @@ type
 
   TfSettings = class(TForm)
     btnOK: TButton;
+    cbVoice: TCheckBox;
+    cbVoiceTrend: TCheckBox;
+    cbVoiceAll: TCheckBox;
     edURL: TEdit;
     edSecret: TEdit;
     fnLow: TFileNameEdit;
     fnHigh: TFileNameEdit;
     Label1: TLabel;
     Label10: TLabel;
+    Label11: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -84,6 +88,10 @@ begin
      c.SetValue('/remote/freq', seFreq.Value*60000);
      c.SetValue('/audio/low', fnLow.FileName);
      c.SetValue('/audio/high', fnHigh.FileName);
+
+     c.SetValue('/glucose/voice', cbVoice.Checked);
+     c.SetValue('/glucose/voicetrend', cbVoiceTrend.Checked);
+     c.SetValue('/glucose/voiceall', cbVoiceAll.Checked);
 
      c.SetValue('/remote/freq', seFreq.Value*60000);
   except

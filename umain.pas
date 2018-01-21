@@ -26,7 +26,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
   fpImage,  fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem {$endif};
+  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif};
 
 type
 
@@ -35,7 +35,7 @@ type
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
     url, api, lowexec, sndhyper, sndhypo: string;
-    mmol, alert, colorval, colortrend, hover, hovercolor, hoverwindowcolor: boolean;
+    mmol, alert, colorval, colortrend, hover, hovercolor, hoverwindowcolor, voice, voiceall, voicetrend: boolean;
     snooze, arrows, hovertrans, updates: integer;
   end;
 
@@ -326,6 +326,12 @@ begin
      cfg.hovertrans := cfgf.GetValue('/gui/hovertrans', 100);
      cfg.hovercolor := cfgf.GetValue('/gui/hovercolor', false);
      cfg.hoverwindowcolor := cfgf.GetValue('/gui/hoverwindowcolor', false);
+
+     cfg.voice := cfgf.GetValue('/glucose/voice', false);
+     cfg.voicetrend := cfgf.GetValue('/glucose/voicetrend', false);
+     cfg.voiceall := cfgf.GetValue('/glucose/voiceall', false);
+
+
      cfgf.free;
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
@@ -457,6 +463,10 @@ begin
   fSettings.fnHigh.FileName := cfg.sndhyper;
   fSettings.fnLow.FileName := cfg.sndhypo;
   fSettings.seFreq.Value := round(cfg.updates/60000);
+  fSettings.cbVoice.Checked := cfg.voice;
+  fSettings.cbVoiceAll.Checked := cfg.voiceall;
+  fSettings.cbVoiceTrend.Checked := cfg.voicetrend;
+
   fSettings.ShowModal;
   tUpdate.Interval:=cfg.updates;
   LoadCFG;
@@ -547,6 +557,9 @@ var
   i: integer;
   snoozed: int64;
   dir: TDirection;
+  voice: OLEVariant;
+  SavedCW: Word;
+  speech: widestring;
 begin
   // Parse the direction
   if title= '' then begin
@@ -554,6 +567,16 @@ begin
     lblVal.Font.Color:=clNone;
     lbl.Caption := GetDirectionName(dir);
     imTrend.Picture.Clear;
+    {$ifdef windows}
+    try
+    voice := CreateOLEObject('SAPI.SpVoice');
+    if cfg.voice then
+        voice.Speak('TrayTrend has not recieved any glucose reading', 0);
+    voice := Unassigned;
+    finally
+      voice := Unassigned;
+    end;
+    {$endif}
     Exit;
   end;
 
@@ -595,11 +618,45 @@ begin
   // Manage notifications
   if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
     {$ifdef Windows}
+
+//    showMessage(voice.voice.getdescription(0));
+
     if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
       sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
     else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
       sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
+
+    // Change FPU interrupt mask to avoid SIGFPE exceptions
+    SavedCW := Get8087CW;
+    try
+      if cfg.voice then begin
+
+      if bgval > cfg.hyper then
+          speech := 'High blood glucose. '+ formatBG(bgval, true)+'!'
+      else if bgval < cfg.hypo then
+          speech := 'Low blood glucose. '+ formatBG(bgval, true)+'!'
+      else if cfg.voiceall then
+          speech := 'Blood glucose is '+ formatBG(bgval, true)+'!';
+
+
+      if (bgtrend <> 'Steady') and (cfg.voicetrend) then
+           speech := speech+' Glucose trend is '+ lbl.Caption+'.';
+
+      voice := CreateOLEObject('SAPI.SpVoice');
+      Set8087CW(SavedCW or $4);
+      if speech <> '' then
+           voice.Speak('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]), 1);
+
+      end;
+     finally
+      // Restore FPU mask
+      Set8087CW(SavedCW);
+      voice:=Unassigned;
+     end;
     {$endif}
+
+
+
 
 
     if (assigned(notifi)) (*and (lastalert <> dir)*) and (snoozed >= cfg.snooze) then begin
@@ -642,6 +699,7 @@ procedure TfMain.UpdateBG;
   TempBitmap: TBitmap;
   bgarrow: ticon;
   bgcolor: tcolor;
+
 begin
   try
     fetchValues;
@@ -687,7 +745,6 @@ begin
   end;
   lblVal.caption := formatBG(bgval, false);
   lblTrend.Width := lblVal.Width;
-
 end;
 
 {$R *.lfm}
