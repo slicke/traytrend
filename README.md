@@ -13,3 +13,5 @@ TrayTrend gets blood glucose readings from Nightscout and displays them in an ea
 - Optional on-top transparent window hovering on-top of your desktop showing glucose data
 - Supports both mmol/L and mg/dL
 - Custom colors, glucose limits
+
+[Get the latest version here](https://github.com/slicke/traytrend/releases/latest)
