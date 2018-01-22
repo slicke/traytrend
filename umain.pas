@@ -26,7 +26,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
   fpImage,  fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif};
+  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif}, LazUTF8;
 
 type
 
@@ -63,6 +63,7 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    miTrend: TMenuItem;
     pnMain: TPopupMenu;
     pnTop: TPanel;
     pnAlert: TPopupNotifier;
@@ -103,6 +104,7 @@ var
   bgtrend: string;
   lastalert: TDirection = NONE;
   lastalertts: TDateTime;
+  lastdirection: TDirection;
 
 implementation
 
@@ -586,6 +588,8 @@ begin
     dir := NOT_COMPUTABLE;
   end;
 
+  lastdirection := dir;
+
   // Calculate snooze time
   snoozed := MinutesBetween(Now, lastalertts);
   // Set the "user firendly" direction name
@@ -690,6 +694,21 @@ begin
       result := cfg.cok;
 end;
 
+function GetUTFArrow(trend: TDirection): UTF8String;
+begin
+case trend of
+  Flat: result := '→';
+  DoubleDown: result := '↓↓';
+  DoubleUp: result := '↑↑';
+  FortyFiveDown: result := '⭝';
+  FortyFiveUp: result := '⭜';
+  SingleDown: result :=  '↓';
+  SingleUp: result := '↑';
+  else
+    result := 'ERR';
+end;
+end;
+
 // Update icons. A big part is code based on FPC documentation for generating icons on-the.go
 procedure TfMain.UpdateBG;
   var
@@ -721,9 +740,19 @@ begin
     TempBitMap.Canvas.Brush.Color := bgcolor;
     TempBitMap.Canvas.FillRect(0, 0, w, h);
     TempBitMap.Canvas.Font:=Canvas.Font;
-    TempBitMap.Canvas.Draw(0, 0, bgarrow);
+//    TempBitMap.Canvas.Draw(0, 0, bgarrow);
 
-    TempBitMap.Canvas.TextOut(0,0,formatBG(bgval, true));//0,0,'10.2');
+    TempBitmap.Canvas.Font.Color := GetHoverColor(bgcolor);
+    {$ifdef windows}
+      TempBitmap.Canvas.Font.Name := 'Trebuchet MS';
+      TempBitmap.Canvas.Font.Style := [fsBold];
+      TempBitmap.Canvas.Font.Size := 9;
+    {$endif}
+    TempBitMap.Canvas.TextOut(0, 7 , formatBG(bgval, true));//0,0,'10.2');
+//    TempBitMap.Canvas.TextOut(0,10,GetUTFArrow(lastdirection));//0,0,'10.2');
+    miTrend.ImageIndex := ord(lastdirection);
+    imTrend.Caption := formatBG(bgval, true) + lblTrend.Caption;
+
     TempIntfImg.LoadFromBitmap(TempBitmap.Handle, TempBitmap.MaskHandle);
 
 
