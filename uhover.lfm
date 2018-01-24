@@ -12,11 +12,11 @@ object fHover: TfHover
   FormStyle = fsSystemStayOnTop
   OnCreate = FormCreate
   OnDblClick = FormDblClick
-  OnMouseDown = lblValMouseDown
+  OnMouseDown = MoveMouseDown
   OnMouseEnter = FormMouseEnter
   OnMouseLeave = FormMouseLeave
-  OnMouseMove = lblValMouseMove
-  OnMouseUp = lblValMouseUp
+  OnMouseMove = MoveMouse
+  OnMouseUp = MoveMouseUp
   OnShow = FormShow
   LCLVersion = '1.8.0.6'
   Visible = True
@@ -34,13 +34,12 @@ object fHover: TfHover
     ParentColor = False
     ParentFont = False
     PopupMenu = fMain.pnMain
-    OnClick = lblValClick
     OnDblClick = FormDblClick
-    OnMouseDown = lblValMouseDown
+    OnMouseDown = MoveMouseDown
     OnMouseEnter = FormMouseEnter
     OnMouseLeave = FormMouseLeave
-    OnMouseMove = lblValMouseMove
-    OnMouseUp = lblValMouseUp
+    OnMouseMove = MoveMouse
+    OnMouseUp = MoveMouseUp
   end
   object lblTrend: TLabel
     Left = 0
@@ -53,12 +52,11 @@ object fHover: TfHover
     ParentColor = False
     ParentFont = False
     PopupMenu = fMain.pnMain
-    OnClick = lblTrendClick
     OnDblClick = FormDblClick
-    OnMouseDown = lblValMouseDown
+    OnMouseDown = MoveMouseDown
     OnMouseEnter = FormMouseEnter
     OnMouseLeave = FormMouseLeave
-    OnMouseMove = lblValMouseMove
-    OnMouseUp = lblValMouseUp
+    OnMouseMove = MoveMouse
+    OnMouseUp = MoveMouseUp
   end
 end

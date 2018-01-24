@@ -9,7 +9,6 @@ object Splash: TSplash
   ClientWidth = 411
   Color = 4210752
   FormStyle = fsSplash
-  OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.8.0.6'
   object Panel1: TPanel
@@ -40,7 +39,6 @@ object Splash: TSplash
       Height = 90
       Top = 8
       Width = 80
-      OnClick = Image1Click
       Picture.Data = {
         0A544A706567496D61676556100000FFD8FFE000104A46494600010101004800
         480000FFE20C584943435F50524F46494C4500010100000C484C696E6F021000

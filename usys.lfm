@@ -200,8 +200,6 @@ object fSysSettings: TfSysSettings
     Top = 368
     Width = 65
     Caption = 'Both left'
-    OnChange = cbArrowLeftChange
-    OnClick = cbArrowLeftClick
     TabOrder = 12
   end
   object cbArrowRight: TRadioButton
@@ -211,8 +209,6 @@ object fSysSettings: TfSysSettings
     Top = 368
     Width = 73
     Caption = 'Both right'
-    OnChange = cbArrowLeftChange
-    OnClick = cbArrowLeftClick
     TabOrder = 13
   end
   object cbArrowMix: TRadioButton
@@ -222,8 +218,6 @@ object fSysSettings: TfSysSettings
     Top = 368
     Width = 119
     Caption = 'High right, low left'
-    OnChange = cbArrowLeftChange
-    OnClick = cbArrowLeftClick
     TabOrder = 14
   end
   object cbHover: TCheckBox

@@ -23,7 +23,7 @@ unit usys;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SpinEx, Forms, Controls, Graphics, Dialogs,
+  SysUtils, SpinEx, Forms, Controls, Dialogs,
   EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf;
 
 type
@@ -65,9 +65,6 @@ type
     seHover: TSpinEdit;
     tbSnooze: TTrackBar;
     procedure btnOKClick(Sender: TObject);
-    procedure cbAlertChange(Sender: TObject);
-    procedure cbArrowLeftChange(Sender: TObject);
-    procedure cbArrowLeftClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
     procedure pnHighClick(Sender: TObject);
     procedure tbSnoozeChange(Sender: TObject);
@@ -86,6 +83,7 @@ implementation
 
 { TfSysSettings }
 
+// Save CFG when OK is clicked
 procedure TfSysSettings.btnOKClick(Sender: TObject);
 var
   c: TJSONConfig;
@@ -156,26 +154,13 @@ begin
 
 end;
 
-procedure TfSysSettings.cbAlertChange(Sender: TObject);
-begin
-
-end;
-
-procedure TfSysSettings.cbArrowLeftChange(Sender: TObject);
-begin
-
-end;
-
-procedure TfSysSettings.cbArrowLeftClick(Sender: TObject);
-begin
-
-end;
-
+// Enable the box if the feature is checked
 procedure TfSysSettings.cbrunChange(Sender: TObject);
 begin
   fnRun.Enabled := cbrun.Checked;
 end;
 
+// Color pickers for the different value limits
 procedure TfSysSettings.pnHighClick(Sender: TObject);
 begin
   with TColorDialog.Create(self) do begin
@@ -185,6 +170,7 @@ begin
   end;
 end;
 
+// Explain the slider value
 procedure TfSysSettings.tbSnoozeChange(Sender: TObject);
 begin
   lblSnooze.Caption := 'Snooze time: ' + IntToStr(tbSnooze.Position) + ' minutes';

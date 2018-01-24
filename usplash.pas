@@ -23,7 +23,7 @@ unit usplash;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Forms, Controls, StdCtrls,
   ExtCtrls;
 
 type
@@ -35,8 +35,6 @@ type
     Label1: TLabel;
     Label3: TLabel;
     Panel1: TPanel;
-    procedure FormCreate(Sender: TObject);
-    procedure Image1Click(Sender: TObject);
   private
 
   public
@@ -51,16 +49,6 @@ implementation
 {$R *.lfm}
 
 { TSplash }
-
-procedure TSplash.FormCreate(Sender: TObject);
-begin
-
-end;
-
-procedure TSplash.Image1Click(Sender: TObject);
-begin
-
-end;
 
 end.
 

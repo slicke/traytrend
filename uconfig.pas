@@ -23,7 +23,7 @@ unit uconfig;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  SysUtils, Forms, Controls, Dialogs, StdCtrls,
   EditBtn, Spin, jsonConf;
 
 type
@@ -54,8 +54,6 @@ type
     rbMgdl: TRadioButton;
     seFreq: TSpinEdit;
     procedure btnOKClick(Sender: TObject);
-    procedure cbrunChange(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
   private
 
   public
@@ -71,6 +69,7 @@ implementation
 
 { TfSettings }
 
+// Save choises when OK is clicked
 procedure TfSettings.btnOKClick(Sender: TObject);
 var
   c: TJSONConfig;
@@ -102,16 +101,6 @@ begin
   end;
   c.free;
   Close;
-end;
-
-procedure TfSettings.cbrunChange(Sender: TObject);
-begin
-
-end;
-
-procedure TfSettings.FormCreate(Sender: TObject);
-begin
-
 end;
 
 end.

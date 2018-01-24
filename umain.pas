@@ -23,14 +23,14 @@ unit umain;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  intfgraphics, LCLType, StdCtrls, EditBtn, Buttons, PopupNotifier,
-  fpImage,  fphttpclient, sha1, fpjson, jsonparser, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, typinfo, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif}, LazUTF8;
+  SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  intfgraphics, LCLType, StdCtrls, Buttons, PopupNotifier,
+  fpImage,  fphttpclient, sha1, fpjson, dateutils, jsonconf,
+  lazutf8sysutils, uconfig, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif};
 
 type
 
-  // Settings the user has
+  // Settings stored in the config file
   TUserVals = record
     ok, hypo, hyper: single;
     cok, chypo, chyper, csoonhyper: tcolor;
@@ -39,8 +39,8 @@ type
     snooze, arrows, hovertrans, updates: integer;
   end;
 
-  // Ported from server source code
-  TDirection = (NONE, DoubleUp, SingleUp, FortyFiveUp, Flat, FortyFiveDown, SingleDown, DoubleDown, NOT_COMPUTABLE, RATE_OUT_OF_RANGE, NO_DATA);
+  // NightScout's possible directions/trends. Ported from the NS server source code.
+  TBGTrend = (NONE, DoubleUp, SingleUp, FortyFiveUp, Flat, FortyFiveDown, SingleDown, DoubleDown, NOT_COMPUTABLE, RATE_OUT_OF_RANGE, NO_DATA);
 
   { TfMain }
 
@@ -80,40 +80,42 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
-    procedure updateTrend(velocity: single; desc, device: string; newdate: tdatetime);
+    procedure UpdateTrend(velocity: single; desc, device: string; newdate: tdatetime);
   private
-    procedure fetchValues;
+    procedure FetchValues;
     function CheckVesion(current: Single; prerelease: boolean): boolean;
-    function DoNSReq(metric: string): TJSONData;
+    function GetMetric(metric: string): TJSONData;
   public
     procedure UpdateBG;
     function SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
-    function formatBG(val: single; short: boolean): string;
-    function convertBG(val: single; ismmol: boolean): single;
+    function FormatBG(val: single; short: boolean): string;
+    function ConvertBGUnit(val: single; ismmol: boolean): single;
     procedure LoadCFG;
     function GetBGColor(val: single): tcolor;
-    function GetDirectionName(dir: TDirection): string;
+    function GetTrendName(tr: TBGTrend): string;
   end;
 
+const
+  ttversion = 0.31;
 var
   fMain: TfMain;
-  cfg: TUserVals;
-  lastbg: single = -1;
-  bgval: single;
-  lastread: int64;
-  bgtrend: string;
-  lastalert: TDirection = NONE;
-  lastalertts: TDateTime;
-  lastdirection: TDirection;
+  cfg: TUserVals;                  // Current config variables loaded
+  lastbg: single = -1;             // Last processed blood sugar
+  bgval: single;                   // Current blood sugar
+  lastread: int64;                 // Timestamp for last reading (as reported by NS)
+  bgtrend: string;                 // Current trend
+  lastalert: TBGTrend = NONE;      // The trend when last alert was triggered
+  lastalertts: TDateTime;          // Time and date when last alert was triggered
+  lastbgtrend: TBGTrend;           // Last processed trend
 
 implementation
 
-// Process a trend/direction to a GUI string
-function tfMain.GetDirectionName(dir: TDirection): string;
+// Process a trend to a GUI string
+function tfMain.GetTrendName(tr: TBGTrend): string;
 begin
-  case dir of
+  case tr of
     NONE:
-      result := 'No direction';
+      result := 'No trend';
     DoubleUp:
       result := 'Very fast rise';
     SingleUp:
@@ -137,8 +139,8 @@ begin
   end;
 end;
 
-// Fetch version data from GitHub
-function tfMain.DoNSReq(metric: string): TJSONData;
+// Get data from Nightscout
+function tfMain.GetMetric(metric: string): TJSONData;
 var
   ans : string;
   code: integer;
@@ -156,34 +158,39 @@ begin
   except
     on E: Exception do begin
     if code = 401 then
-      ShowMessage('Your API token appears to be wrong, or Nightscout is having problems at this time (hosted on Heroku?) and should return in a few moments.')
+      ShowMessage('Your credentials (API token) appears to be wrong, please verify your configuration. (Error 401)')
+    else if code = 400 then
+      ShowMessage('Nightscout can''t understand our request. Either Nightscout is malfunctioning or you have not entered the address correctly. (Error 400)')
+    else if code = 404 then
+      ShowMessage('No system appears to exist at the NightScout address you have specified. (Error 404)')
     else
-       ShowMessage('A netowork error occured: ' + E.Message + LineEnding + 'A new attempt will be made on the next schedule ');
+       ShowMessage('A netowork error occured: ' + E.Message + LineEnding + 'A new attempt will be made momentarily');
     end;
   end;
 end;
-// Fetch a JSON resource form Nightscout
+
+// Check the application version
 function tfMain.CheckVesion(current: Single; prerelease: boolean): boolean;
 var
   ans, ver : string;
   res:TJSONData;
   tmpfs: TFormatSettings;
 begin
-//     res := GetJSON(ans);
   tmpfs.DecimalSeparator := '.';
   ver := FloatToStrF(current, ffGeneral, 3, 3, tmpfs);
 
+  // We want to differentiate releases and pre builds
   if not prerelease then
     ver := 'v'+ver;
 
   with TFPHTTPClient.Create(nil) do begin
-   AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb) TrayTrend/'+ver);                       // We don't get any result without the user agent seet
-   ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases/latest');
+   AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb) TrayTrend/'+ver);                       // We don't get any result without the user agent set
+   ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases/latest');                   // As GitHub for the recent releases
   end;
   if ans = '' then
     Exit;
 
-  if not prerelease then // So we dont have to parse differently
+  if not prerelease then // So we dont have to parse the results differently, there's not array if we only request one entry
     ans := '['+ans+']';
 
   try
@@ -196,7 +203,7 @@ begin
 end;
 
 // Get glucose values from NS
-procedure tfMain.fetchValues;
+procedure tfMain.FetchValues;
 var
   val, res: TJSONData;
   i: integer;
@@ -206,46 +213,50 @@ begin
   // Contact the API over SSL
   lblTimeAgo.Caption:= 'Updating now';
   Application.ProcessMessages;
-  res := DoNSReq('entries');
+  res := GetMetric('entries');
 
 
   // Go through all resturned values in reverse order, so we enter them in chronological order
   for i := res.Count-1 downto 0 do begin
     val := res.Items[i];
 
+    // Skip if the entry isn't a glucose reading
     if val.findpath('type').AsString <> 'sgv' then
       Continue;
 
+    // Set the current BG as the last one, before reading a new "current"
     lastbg := bgval;
     bgval := val.findpath('sgv').AsInteger;
     ts := val.findpath('date').AsInt64;
 
-    // We dont have to do things twice
+    // If the last and current timestamps match nothing has changed
     if ts = lastread then
         Exit;
     lastread := ts;
 
     // We get milliseconds here, wehich we remove
     tdate := UnixToDateTime(round(ts/1000));
-    updateTrend(val.findpath('delta').AsInteger, val.findpath('direction').AsString, val.findpath('device').AsString, tdate);
+    UpdateTrend(val.findpath('delta').AsInteger, val.findpath('direction').AsString, val.findpath('device').AsString, tdate);
   end;
 end;
 
 // Process a new value/reading and put it in the GUI
-procedure TfMain.updateTrend(velocity: single; desc, device: string; newdate: TDateTime);
+procedure TfMain.UpdateTrend(velocity: single; desc, device: string; newdate: TDateTime);
 var
   datediff: int64;
 begin
   // Update labels with basic info
   bgtrend := desc;
-  lblSpeed.Caption := formatbg(velocity, false);
+  lblSpeed.Caption := FormatBG(velocity, false);
+
+  // Add a + if the velocity is positive, minus is handled by conversion anyway
   if velocity > 0 then
     lblSpeed.Caption := '+'+lblSpeed.Caption;
 
-   // Figure out how to explain the time diff
+   // Get a human readable value, minutes between readings
   datediff := MinutesBetween(NowUTC, newdate);
 
-  // We dont want to display 120 minutes, 2 hours is better
+  // But we dont want to display 120 minutes, 2 hours is better etc
   if datediff <= 60 then
     lblTimeAgo.Caption := Format('%d minute(s) ago', [datediff])
   else if datediff >= 1440 then
@@ -253,7 +264,7 @@ begin
   else
     lblTimeAgo.Caption := Format('%d hour(s) ago', [HoursBetween(NowUTC, newdate)]);
 
-  // We set the full time as a hint if one hovers above the time
+  // We set the full time as a hint if one hovers the time label
   lblTimeAgo.Hint := DateTimeToStr(newdate);
 
   // If the user wants to run a process if low, we do it here
@@ -262,22 +273,23 @@ begin
 end;
 
 // Process a reading into a good value.
-function TfMain.formatBG(val: single; short: boolean): string;
+function TfMain.FormatBG(val: single; short: boolean): string;
 begin
-  if short then begin  // Short determines if we add mmol/mg/dl at the end
-      if cfg.mmol then
-          result := FloatToStrF(convertBG(val, false), ffFixed, 3, 1) // We get mg/dl from NS so we need to convert
-      else
-          result := FloatToStrF(val, ffNumber, 3, 0);
-  end
-  else if cfg.mmol then
-    result := Format('%s mmol/L', [FloatToStrF(convertBG(val, false), ffFixed, 3, 1)])
+  if cfg.mmol then
+    result := FloatToStrF(ConvertBGUnit(val, false), ffFixed, 3, 1) // We get mg/dL from NS so we need to convert to mmol/L
   else
-    result := Format('%s mg/dL', [FloatToStrF(val, ffNumber, 3, 0)])
+    result := FloatToStrF(val, ffNumber, 3, 0); // Just format the mg/dL value, no conversion needed
+
+  if not short then begin  // Short determines if we add mmol/mg/dl at the end of the reading
+    if cfg.mmol then
+       result := Format('%s mmol/L', [result]) // See above, but with the unit added
+    else
+       result := Format('%s mg/dL', [result]);
+  end;
 end;
 
 // Convert units between one and other
-function TfMain.convertBG(val: single; ismmol: boolean): single;
+function TfMain.ConvertBGUnit(val: single; ismmol: boolean): single;
 begin
 if ismmol then // meaning we want mg/dl
    result := val* 18
@@ -350,6 +362,7 @@ begin
 
 end;
 
+// Rotate images, to please the user's preference of direction
 procedure MirrorArrow(boxes: array of TImageList; index, dest: integer);
 var
   pic, src: TBitmap;
@@ -381,8 +394,9 @@ begin
   // Load settings
   LoadCFG;
 
+  // Check which way the user wants ther arrows facing
   case cfg.arrows of
-    1: begin                       // Both left
+    1: begin   // Both left
       MirrorArrow([ilBG, ilFull], 5, 5);
     end;
     2: begin  // Both right
@@ -399,22 +413,23 @@ begin
       btOS.Enabled := false;
   end;
 
-  CheckVesion(0.31, false);
-
+  CheckVesion(ttversion, false);
 end;
 
 procedure TfMain.FormShow(Sender: TObject);
 begin
   if fHover.Visible then
-    fHover.Hide; // We need to trigger Show anybow
+    fHover.Hide; // We need to trigger "Show" to make the window look right anyways
 
+  // Create the hover window if it's wanted
   if cfg.hover then begin
      fHover.trans := cfg.hovertrans;
      fHover.Visible:=true;
-     fHover.lblVal.Caption := formatBG(bgval, true);
+     fHover.lblVal.Caption := FormatBG(bgval, true);
   end;
 end;
 
+// Minimizing the main window also minimizes the hover window, so we need to prevent this
 procedure TfMain.FormWindowStateChange(Sender: TObject);
 begin
   if (assigned(fhover)) and (WindowState = wsMinimized) then begin
@@ -424,6 +439,7 @@ begin
   end;
 end;
 
+// Show ther main form
 procedure TfMain.MenuItem1Click(Sender: TObject);
 begin
   Show;
@@ -432,7 +448,7 @@ end;
 
 procedure TfMain.MenuItem3Click(Sender: TObject);
 begin
-  btConf.Click;
+  btConf.Click;  // To avid redundancy we just trigger "click" on a button that does what we want already
 end;
 
 procedure TfMain.MenuItem4Click(Sender: TObject);
@@ -442,7 +458,7 @@ end;
 
 procedure TfMain.MenuItem5Click(Sender: TObject);
 begin
-  OpenURL(cfg.url);
+  OpenURL(cfg.url); // Open Nightscout in the user's browser of choise
 end;
 
 // Update the readings when needed
@@ -453,10 +469,10 @@ end;
 
 procedure TfMain.btnUpdateClick(Sender: TObject);
 begin
-  updatebg;
+  UpdateBG;
 end;
 
-// Open up the settings box
+// Open up the settings box and set the current values
 procedure TfMain.btConfClick(Sender: TObject);
 begin
   fSettings.edSecret.Text := cfg.api;
@@ -470,6 +486,7 @@ begin
   fSettings.cbVoiceTrend.Checked := cfg.voicetrend;
 
   fSettings.ShowModal;
+  // Modal pauses until the window closes. When it closes, it rewrites the config file and then we load it again
   tUpdate.Interval:=cfg.updates;
   LoadCFG;
   btnUpdate.Click;
@@ -482,7 +499,6 @@ begin
   fSysSettings.pnLow.Color := cfg.chypo;
   fSysSettings.pnSoonHigh.Color := cfg.csoonhyper;
   fSysSettings.pnHigh.Color := cfg.chyper;
-//  fSysSettings.cbAlert.Checked := cfg.alert;
   fSysSettings.cbOnTop.Checked := (self.FormStyle = fsSystemStayOnTop);
   fSysSettings.tbSnooze.Position :=  cfg.snooze;
   fSysSettings.lblSnooze.Caption := 'Snooze time: ' + IntToStr(cfg.snooze) + ' minutes';
@@ -500,9 +516,9 @@ begin
     fSysSettings.seHigh.DecimalPlaces:=2;
     fSysSettings.selOW.DecimalPlaces:=2;
     fSysSettings.seok.DecimalPlaces:=2;
-    fSysSettings.seHigh.value:= convertBG(cfg.hyper, false);
-    fSysSettings.selOW.value:=convertBG(cfg.hypo, false);
-    fSysSettings.seok.value:=convertBG(cfg.ok, false);
+    fSysSettings.seHigh.value:= ConvertBGUnit(cfg.hyper, false);
+    fSysSettings.selOW.value:=ConvertBGUnit(cfg.hypo, false);
+    fSysSettings.seok.value:=ConvertBGUnit(cfg.ok, false);
   end else begin
     fSysSettings.seHigh.DecimalPlaces:=0;
     fSysSettings.selOW.DecimalPlaces:=0;
@@ -521,6 +537,7 @@ begin
       fSysSettings.cbArrowMix.Checked:=true;
 
   fSysSettings.ShowModal;
+  // Since Modal is blocking, the form will write a new cfg which we then load
   // We need to reset these if the color is disabled
   lblTrend.Font.Color:=clDefault;
   lblVal.Font.Color:=clDefault;
@@ -530,6 +547,7 @@ begin
   FormShow(self);
 end;
 
+// Get a good readable color based on the background
 function GetHoverColor(const AColor: TColor): TColor;
 var
   R, G, B: single;
@@ -545,29 +563,30 @@ begin
   end;
 end;
 
+// Continuation of GetHoverColor, though a bit shaded
 function GetHoverTrendColor(const AColor: Tcolor): TColor;
 begin
-  if acolor = clWhite then
+  if GetHoverColor(AColor) = clWhite then
       result := $00F2F2F2
   else
       result := $00484848;
 end;
 
-// Figure out which image to show when the trend changes and the name
+// Paint the graphical things
 function TfMain.SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
 var
   i: integer;
   snoozed: int64;
-  dir: TDirection;
+  tr: TBGTrend;
   voice: OLEVariant;
   SavedCW: Word;
   speech: widestring;
 begin
-  // Parse the direction
+  // Parse the trend and handle none
   if title= '' then begin
-    dir := NO_DATA;
+    tr := NO_DATA;
     lblVal.Font.Color:=clNone;
-    lbl.Caption := GetDirectionName(dir);
+    lbl.Caption := GetTrendName(tr);
     imTrend.Picture.Clear;
     {$ifdef windows}
     try
@@ -583,107 +602,108 @@ begin
   end;
 
   try
-    ReadStr(title, dir)
+    ReadStr(title, tr) // Parse the trend
   except
-    dir := NOT_COMPUTABLE;
+    tr := NOT_COMPUTABLE;
   end;
 
-  lastdirection := dir;
+  lastbgtrend := tr;  // Since we're setting a new trend, store the "current" one as the "last" one
 
   // Calculate snooze time
   snoozed := MinutesBetween(Now, lastalertts);
-  // Set the "user firendly" direction name
-  lbl.Caption := GetDirectionName(dir);
+  // Set the "user firendly" trend name
+  lbl.Caption := GetTrendName(tr);
   // Assign the right icon and text color
-  i := ord(dir);
+  i := ord(tr);
+
   // Fix GUI things
   result := GetBGColor(bgval);
+
+  // Only handle the hover window if it's assigned/created
   if assigned(fHover) then
-  fHover.lblTrend.Font.Color := $00F2F2F2;
-  if cfg.colortrend then
-     lbl.Font.Color := result;
-  if cfg.colorval then
-     lblVal.Font.Color := result;
-  if (cfg.hoverwindowcolor) and assigned(fHover) then begin
-     fHover.Color := result;
-//     if (cfg.colorval) then begin
-        fHover.lblVal.Font.Color := GetHoverColor(result);
-        fHover.lblTrend.Font.Color := GetHoverTrendColor(result);
-  //   end;
-  end else if (cfg.hovercolor) and assigned(fHover) then begin
+    fHover.lblTrend.Font.Color := $00F2F2F2;
+    if cfg.colortrend then
+       lbl.Font.Color := result;
+    if cfg.colorval then
+       lblVal.Font.Color := result;
+    if (cfg.hoverwindowcolor) and assigned(fHover) then begin
+       fHover.Color := result;
+
+    // Set the text colors so they're visible
+    fHover.lblVal.Font.Color := GetHoverColor(result);
+    fHover.lblTrend.Font.Color := GetHoverTrendColor(result);
+
+    end else if (cfg.hovercolor) and assigned(fHover) then begin
+    // If we're not coloring the window, ust use defaults
      fHover.lblVal.Font.Color := result;
      fHover.Color:=clBlack;
-  end;
+    end;
 
+    // Set icons
+    ilBG.GetIcon(i, smallimg);
+    ilFull.GetIcon(i, img);
 
-  ilBG.GetIcon(i, smallimg);
-  ilFull.GetIcon(i, img);
-
-  // Manage notifications
-  if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
+    // Manage notifications
+    if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
     {$ifdef Windows}
+      if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
+        sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
+      else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
+        sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
 
-//    showMessage(voice.voice.getdescription(0));
+      // Change FPU interrupt mask to avoid SIGFPE exceptions
+      SavedCW := Get8087CW;
 
-    if (bgval > cfg.hyper) and (cfg.sndhyper <> '') then
-      sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
-    else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
-      sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
+      try
+        // Do text-to-speech strings and talk
+        if cfg.voice then begin
 
-    // Change FPU interrupt mask to avoid SIGFPE exceptions
-    SavedCW := Get8087CW;
-    try
-      if cfg.voice then begin
-
-      if bgval > cfg.hyper then
-          speech := 'High blood glucose. '+ formatBG(bgval, true)+'!'
-      else if bgval < cfg.hypo then
-          speech := 'Low blood glucose. '+ formatBG(bgval, true)+'!'
-      else if cfg.voiceall then
-          speech := 'Blood glucose is '+ formatBG(bgval, true)+'!';
+        if bgval > cfg.hyper then
+          speech := 'High blood glucose. '+ FormatBG(bgval, true)+'!'
+        else if bgval < cfg.hypo then
+          speech := 'Low blood glucose. '+ FormatBG(bgval, true)+'!'
+        else if cfg.voiceall then
+          speech := 'Blood glucose is '+ FormatBG(bgval, true)+'!';
 
 
-      if (bgtrend <> 'Steady') and (cfg.voicetrend) then
+        if (bgtrend <> 'Steady') and (cfg.voicetrend) then
            speech := speech+' Glucose trend is '+ lbl.Caption+'.';
 
-      voice := CreateOLEObject('SAPI.SpVoice');
-      Set8087CW(SavedCW or $4);
-      if speech <> '' then
+        voice := CreateOLEObject('SAPI.SpVoice');
+        Set8087CW(SavedCW or $4);
+        if speech <> '' then
            voice.Speak('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]), 1);
 
+        end;
+      finally
+        // Restore FPU mask
+        Set8087CW(SavedCW);
+        voice:=Unassigned;
       end;
-     finally
-      // Restore FPU mask
-      Set8087CW(SavedCW);
-      voice:=Unassigned;
-     end;
     {$endif}
 
-
-
-
-
-    if (assigned(notifi)) (*and (lastalert <> dir)*) and (snoozed >= cfg.snooze) then begin
+    // Show an alert if not snoozed
+    if (assigned(notifi)) and (snoozed >= cfg.snooze) then begin
       ilFull.GetIcon(i, notifi.Icon.Icon);
-      notifi.Text := lbl.Caption+' - '+lblTimeAgo.caption+LineEnding+LineEnding+'Current value: ' + formatBG(bgval, false)+LineEnding+'Last value: '+formatBG(lastbg, false);
+      notifi.Text := lbl.Caption+' - '+lblTimeAgo.caption+LineEnding+LineEnding+'Current value: ' + FormatBG(bgval, false)+LineEnding+'Last value: '+FormatBG(lastbg, false);
       notifi.Show;
-      lastalert := dir;
+      lastalert := tr;
       lastalertts := Now;
 
       lblSnooze.Caption := '(snoozing next alert for '+inttostr(cfg.snooze)+ ' minutes)';
     end else if (snoozed < cfg.snooze) then // Add a note that we're snoozing
           lblSnooze.Caption := '(alert snoozed '+ inttostr(cfg.snooze-snoozed)+' minutes)';
-  end else begin
-    lastalert := NONE;
-    lastalertts := Now;
-    lblSnooze.Caption := '';
+    end else begin
+    // If we're not high or low, we can clear any alerts
+      lastalert := NONE;
+      lastalertts := Now;
+      lblSnooze.Caption := '';
   end;
 end;
 
 // Get the correct color for a BG value in the UI
 function TfMain.GetBGColor(val: single): tcolor;
 begin
-
   if val > cfg.hyper then
       result := cfg.chyper
   else if val < cfg.hypo then
@@ -694,7 +714,8 @@ begin
       result := cfg.cok;
 end;
 
-function GetUTFArrow(trend: TDirection): UTF8String;
+// Get an UTF char representing a trend arrow
+function GetUTFArrow(trend: TBGTrend): UTF8String;
 begin
 case trend of
   Flat: result := '→';
@@ -709,9 +730,9 @@ case trend of
 end;
 end;
 
-// Update icons. A big part is code based on FPC documentation for generating icons on-the.go
+// Update the readings. A big part of the tray icon code is code based on FPC documentation for generating icons on-the-go
 procedure TfMain.UpdateBG;
-  var
+var
   TempIntfImg: TLazIntfImage;
   ImgHandle, ImgMaskHandle: HBitmap;
   w, h: Integer;
@@ -721,7 +742,7 @@ procedure TfMain.UpdateBG;
 
 begin
   try
-    fetchValues;
+    FetchValues;
   except
     ShowMessage('Error contacting NightScout');
     Exit;
@@ -748,10 +769,10 @@ begin
       TempBitmap.Canvas.Font.Style := [fsBold];
       TempBitmap.Canvas.Font.Size := 9;
     {$endif}
-    TempBitMap.Canvas.TextOut(0, 7 , formatBG(bgval, true));//0,0,'10.2');
-//    TempBitMap.Canvas.TextOut(0,10,GetUTFArrow(lastdirection));//0,0,'10.2');
-    miTrend.ImageIndex := ord(lastdirection);
-    imTrend.Caption := formatBG(bgval, true) + lblTrend.Caption;
+    TempBitMap.Canvas.TextOut(0, 7 , FormatBG(bgval, true));//0,0,'10.2');
+//    TempBitMap.Canvas.TextOut(0,10,GetUTFArrow(lastbgtrend));//0,0,'10.2');
+    miTrend.ImageIndex := ord(lastbgtrend);
+    imTrend.Caption := FormatBG(bgval, true) + lblTrend.Caption;
 
     TempIntfImg.LoadFromBitmap(TempBitmap.Handle, TempBitmap.MaskHandle);
 
@@ -764,7 +785,7 @@ begin
     tTray.Show;
 
     if assigned(fHover) then begin
-      fHover.lblVal.Caption := formatBG(bgval, true);
+      fHover.lblVal.Caption := FormatBG(bgval, true);
       fHover.lblTrend.Caption := lblTrend.Caption;
     end;
 
@@ -772,7 +793,7 @@ begin
     TempIntfImg.Free;
     TempBitmap.Free;
   end;
-  lblVal.caption := formatBG(bgval, false);
+  lblVal.caption := FormatBG(bgval, false);
   lblTrend.Width := lblVal.Width;
 end;
 
