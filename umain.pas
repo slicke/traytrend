@@ -404,15 +404,6 @@ begin
     end;
   end;
 
-  // Check if we have any useable settings data
-  if cfg.url <> '' then
-      UpdateBG
-  else begin
-      // Disable the GUI elements if we have no data
-      btnUpdate.Enabled := false;
-      btOS.Enabled := false;
-  end;
-
   CheckVesion(ttversion, false);
 end;
 
@@ -426,6 +417,15 @@ begin
      fHover.trans := cfg.hovertrans;
      fHover.Visible:=true;
      fHover.lblVal.Caption := FormatBG(bgval, true);
+  end;
+
+  // Check if we have any useable settings data
+  if cfg.url <> '' then
+      UpdateBG
+  else begin
+      // Disable the GUI elements if we have no data
+      btnUpdate.Enabled := false;
+      btOS.Enabled := false;
   end;
 end;
 
