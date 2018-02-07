@@ -1,7 +1,7 @@
 object fMain: TfMain
-  Left = 861
+  Left = 622
   Height = 132
-  Top = 558
+  Top = 349
   Width = 357
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -28,9 +28,9 @@ object fMain: TfMain
     TabOrder = 0
     object lblVal: TLabel
       Left = 72
-      Height = 45
+      Height = 39
       Top = 8
-      Width = 166
+      Width = 179
       Caption = '??? mmol/L'
       Font.Height = -33
       ParentColor = False
@@ -56,9 +56,9 @@ object fMain: TfMain
     end
     object lblSpeed: TLabel
       Left = 282
-      Height = 15
+      Height = 16
       Top = 0
-      Width = 64
+      Width = 75
       Caption = '+?? mmol/L'
       Font.Color = 3947580
       ParentColor = False
@@ -66,9 +66,9 @@ object fMain: TfMain
     end
     object lblTimeAgo: TLabel
       Left = 272
-      Height = 15
+      Height = 16
       Top = 16
-      Width = 74
+      Width = 88
       Caption = '? minutes ago'
       Font.Color = 6052956
       ParentColor = False
@@ -108,9 +108,9 @@ object fMain: TfMain
   end
   object Label5: TLabel
     Left = 24
-    Height = 15
+    Height = 16
     Top = 111
-    Width = 320
+    Width = 387
     Caption = 'Not for medical use. See https://github.com/slicke/traytrend'
     Font.Color = 11382189
     ParentColor = False
@@ -6771,6 +6771,10 @@ object fMain: TfMain
     object MenuItem5: TMenuItem
       Caption = 'Open NightScout'
       OnClick = MenuItem5Click
+    end
+    object miAbout: TMenuItem
+      Caption = 'About TrayTrend'
+      OnClick = miAboutClickA
     end
   end
 end

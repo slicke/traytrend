@@ -26,7 +26,8 @@ uses
   SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   intfgraphics, LCLType, StdCtrls, Buttons, PopupNotifier,
   fpImage,  fphttpclient, sha1, fpjson, dateutils, jsonconf,
-  lazutf8sysutils, uconfig, usys, lclintf, Menus, uhover {$ifdef Windows}, mmsystem, Comobj {$endif};
+  lazutf8sysutils, uconfig, usys, lclintf, Menus, uhover
+  {$ifdef Windows}, mmsystem, Comobj {$endif}, Classes;
 
 type
 
@@ -63,6 +64,7 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
     miTrend: TMenuItem;
     pnMain: TPopupMenu;
     pnTop: TPanel;
@@ -79,6 +81,7 @@ type
     procedure MenuItem3Click(Sender: TObject);
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
+    procedure miAboutClickA(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
     procedure UpdateTrend(velocity: single; desc, device: string; newdate: tdatetime);
   private
@@ -107,7 +110,13 @@ var
   lastalert: TBGTrend = NONE;      // The trend when last alert was triggered
   lastalertts: TDateTime;          // Time and date when last alert was triggered
   lastbgtrend: TBGTrend;           // Last processed trend
-
+{$ifdef Darwin}
+  macmenu: tmainmenu;
+  applemenu: tmenuitem;
+  macabout: tmenuitem;
+  macsettings: tmenuitem;
+  maccustomization: tmenuitem;
+{$endif}
 implementation
 
 // Process a trend to a GUI string
@@ -405,6 +414,27 @@ begin
   end;
 
   CheckVesion(ttversion, false);
+  {$ifdef DARWIN}
+    fMain.top := pnTop.Height;
+
+    macmenu := TMainMenu.Create(fMain);
+    applemenu := TMenuItem.create(macmenu);
+    applemenu.Caption := #$EF#$A3#$BF;  //Unicode Apple logo char
+    macmenu.Items.Add(applemenu);
+    macabout := TMenuItem.Create(applemenu);
+    macabout.Caption := 'About TrayTrend';
+    macabout.onclick := @miAboutClickA; // This isnt init'ed right now so we cant just assign miAbout iteself as an item
+    applemenu.Add(macabout);
+    macsettings := TMenuItem.Create(macmenu);
+    macsettings.Caption:=btConf.Caption;
+    macsettings.OnClick:=btConf.OnClick;
+    applemenu.add(macsettings);
+    maccustomization := TMenuItem.Create(fMain);
+    maccustomization.Caption:=btOs.Caption;
+    maccustomization.OnClick:=btOS.OnClick;
+    applemenu.add(maccustomization);
+
+  {$endif}
 end;
 
 procedure TfMain.FormShow(Sender: TObject);
@@ -459,6 +489,11 @@ end;
 procedure TfMain.MenuItem5Click(Sender: TObject);
 begin
   OpenURL(cfg.url); // Open Nightscout in the user's browser of choise
+end;
+
+procedure TfMain.miAboutClickA(Sender: TObject);
+begin
+  ShowMessage('TrayTrend is a desktop monitor for the NightScout system, licensed under the GNU Public License v3. Original work by Björn Lindh: github.com/slicke');
 end;
 
 // Update the readings when needed
