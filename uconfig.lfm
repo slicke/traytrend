@@ -45,7 +45,7 @@ object fSettings: TfSettings
     Width = 280
     TabOrder = 1
   end
-  object btnOK: TButton
+  object btnOK: TBitBtn
     Left = 229
     Height = 25
     Top = 456

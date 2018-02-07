@@ -44,7 +44,7 @@ object fSysSettings: TfSysSettings
     State = cbChecked
     TabOrder = 2
   end
-  object btnOK: TButton
+  object btnOK: TBitBtn
     Left = 232
     Height = 25
     Top = 480

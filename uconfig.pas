@@ -24,14 +24,14 @@ interface
 
 uses
   SysUtils, Forms, Controls, Dialogs, StdCtrls,
-  EditBtn, Spin, jsonConf;
+  EditBtn, Spin, jsonConf, extctrls, buttons;
 
 type
 
   { TfSettings }
 
   TfSettings = class(TForm)
-    btnOK: TButton;
+    btnOK: TBitBtn;
     cbVoice: TCheckBox;
     cbVoiceTrend: TCheckBox;
     cbVoiceAll: TCheckBox;

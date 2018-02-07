@@ -88,7 +88,7 @@ object fMain: TfMain
       ParentFont = False
     end
   end
-  object btConf: TButton
+  object btConf: TBitBtn
     Left = 8
     Height = 25
     Top = 80
@@ -97,7 +97,7 @@ object fMain: TfMain
     OnClick = btConfClick
     TabOrder = 1
   end
-  object btOS: TButton
+  object btOS: TBitBtn
     Left = 160
     Height = 25
     Top = 80

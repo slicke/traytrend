@@ -24,14 +24,14 @@ interface
 
 uses
   SysUtils, SpinEx, Forms, Controls, Dialogs,
-  EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf;
+  EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf, buttons;
 
 type
 
   { TfSysSettings }
 
   TfSysSettings = class(TForm)
-    btnOK: TButton;
+    btnOK: TBitBtn;
     cbArrowRight: TRadioButton;
     cbArrowMix: TRadioButton;
     cbHoverWindowColor: TCheckBox;
