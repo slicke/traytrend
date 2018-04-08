@@ -18,7 +18,8 @@ object fHover: TfHover
   OnMouseMove = MoveMouse
   OnMouseUp = MoveMouseUp
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  ShowInTaskBar = stNever
+  LCLVersion = '1.8.2.0'
   Visible = True
   object lblVal: TLabel
     Left = 0

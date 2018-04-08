@@ -1,19 +1,19 @@
 object fSysSettings: TfSysSettings
-  Left = 982
-  Height = 513
-  Top = 361
-  Width = 320
+  Left = 1111
+  Height = 613
+  Top = 499
+  Width = 475
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
-  ClientHeight = 513
-  ClientWidth = 320
+  ClientHeight = 613
+  ClientWidth = 475
   Position = poMainFormCenter
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '1.8.2.0'
   object fnRun: TFileNameEdit
-    Left = 40
-    Height = 23
-    Top = 64
+    Left = 136
+    Height = 22
+    Top = 32
     Width = 256
     FilterIndex = 0
     HideDirectories = False
@@ -25,48 +25,38 @@ object fSysSettings: TfSysSettings
     TabOrder = 0
   end
   object cbrun: TCheckBox
-    Left = 16
-    Height = 19
-    Top = 40
-    Width = 284
+    Left = 112
+    Height = 18
+    Top = 8
+    Width = 312
     Caption = 'Run program/command when low (<2.9 mmol/L)'
     OnChange = cbrunChange
     TabOrder = 1
   end
   object cbNotice: TCheckBox
-    Left = 16
-    Height = 19
+    Left = 112
+    Height = 18
     Hint = 'Pop-up a message on alerts'
-    Top = 88
-    Width = 133
+    Top = 56
+    Width = 150
     Caption = 'Show pop-up notices'
     Checked = True
     State = cbChecked
     TabOrder = 2
   end
   object btnOK: TBitBtn
-    Left = 232
+    Left = 392
     Height = 25
-    Top = 480
+    Top = 576
     Width = 75
     Caption = '&OK'
     OnClick = btnOKClick
     TabOrder = 3
   end
-  object Label1: TLabel
-    Left = 16
-    Height = 21
-    Top = 8
-    Width = 118
-    Caption = 'Optional settings'
-    Font.Height = -16
-    ParentColor = False
-    ParentFont = False
-  end
   object pnHigh: TPanel
-    Left = 256
+    Left = 353
     Height = 18
-    Top = 123
+    Top = 125
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
@@ -75,25 +65,25 @@ object fSysSettings: TfSysSettings
     OnClick = pnHighClick
   end
   object Label2: TLabel
-    Left = 16
-    Height = 15
-    Top = 123
-    Width = 70
+    Left = 112
+    Height = 16
+    Top = 125
+    Width = 82
     Caption = 'High glucose'
     ParentColor = False
   end
   object Label3: TLabel
-    Left = 16
-    Height = 15
-    Top = 148
-    Width = 114
+    Left = 112
+    Height = 16
+    Top = 150
+    Width = 136
     Caption = 'Close to high glucose'
     ParentColor = False
   end
   object pnSoonHigh: TPanel
-    Left = 256
+    Left = 353
     Height = 18
-    Top = 148
+    Top = 150
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
@@ -102,17 +92,17 @@ object fSysSettings: TfSysSettings
     OnClick = pnHighClick
   end
   object Label4: TLabel
-    Left = 16
-    Height = 15
-    Top = 173
-    Width = 61
+    Left = 112
+    Height = 16
+    Top = 175
+    Width = 72
     Caption = 'OK Glucose'
     ParentColor = False
   end
   object pnOK: TPanel
-    Left = 256
+    Left = 353
     Height = 18
-    Top = 173
+    Top = 175
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
@@ -121,17 +111,17 @@ object fSysSettings: TfSysSettings
     OnClick = pnHighClick
   end
   object Label5: TLabel
-    Left = 16
-    Height = 15
-    Top = 198
-    Width = 66
+    Left = 112
+    Height = 16
+    Top = 200
+    Width = 77
     Caption = 'Low glucose'
     ParentColor = False
   end
   object pnLow: TPanel
-    Left = 256
+    Left = 353
     Height = 18
-    Top = 198
+    Top = 200
     Width = 18
     BevelOuter = bvNone
     Color = clBackground
@@ -140,16 +130,16 @@ object fSysSettings: TfSysSettings
     OnClick = pnHighClick
   end
   object cbOnTop: TCheckBox
-    Left = 16
-    Height = 19
+    Left = 112
+    Height = 18
     Hint = 'Don''t allow the main window to be placed behind other apps'
-    Top = 264
-    Width = 186
+    Top = 256
+    Width = 211
     Caption = 'Try to stay on top of other apps'
     TabOrder = 8
   end
   object tbSnooze: TTrackBar
-    Left = 16
+    Left = 112
     Height = 25
     Top = 312
     Width = 280
@@ -160,95 +150,95 @@ object fSysSettings: TfSysSettings
     TabOrder = 9
   end
   object lblSnooze: TLabel
-    Left = 16
-    Height = 15
+    Left = 112
+    Height = 16
     Top = 288
-    Width = 78
+    Width = 94
     Caption = 'Snoooze time: '
     ParentColor = False
   end
   object cbValue: TCheckBox
-    Left = 16
-    Height = 19
+    Left = 112
+    Height = 18
     Hint = 'Color the font of the glucose reading'
     Top = 232
-    Width = 124
+    Width = 140
     Caption = 'Color glucose value'
     TabOrder = 10
   end
   object cbTrend: TCheckBox
-    Left = 154
-    Height = 19
+    Left = 278
+    Height = 18
     Hint = 'Color the font of the glucose trend'
     Top = 232
-    Width = 102
+    Width = 115
     Caption = 'Color trend text'
     TabOrder = 11
   end
   object Label7: TLabel
-    Left = 16
-    Height = 15
-    Top = 352
-    Width = 65
+    Left = 112
+    Height = 16
+    Top = 344
+    Width = 78
     Caption = 'Arrows face:'
     ParentColor = False
   end
   object cbArrowLeft: TRadioButton
-    Left = 24
-    Height = 19
+    Left = 112
+    Height = 18
     Hint = 'The pointy end of the trend arrow is always left'
-    Top = 368
-    Width = 65
+    Top = 360
+    Width = 72
     Caption = 'Both left'
     TabOrder = 12
   end
   object cbArrowRight: TRadioButton
-    Left = 104
-    Height = 19
+    Left = 216
+    Height = 18
     Hint = 'The pointy end of the trend arrow is always right'
-    Top = 368
-    Width = 73
+    Top = 360
+    Width = 81
     Caption = 'Both right'
     TabOrder = 13
   end
   object cbArrowMix: TRadioButton
-    Left = 184
-    Height = 19
+    Left = 312
+    Height = 18
     Hint = 'The pointy end of the trend arrow is right when glucose is high, left when low'
-    Top = 368
-    Width = 119
+    Top = 360
+    Width = 132
     Caption = 'High right, low left'
     TabOrder = 14
   end
   object cbHover: TCheckBox
-    Left = 16
-    Height = 19
+    Left = 112
+    Height = 18
     Hint = 'Show a semi-transparent discrete window with glucose info, which you can drag over the screen'
     Top = 400
-    Width = 127
-    Caption = 'Show hover window'
+    Width = 329
+    Caption = 'Show a transparent, hovering, window with reading'
     TabOrder = 15
   end
   object Label8: TLabel
-    Left = 40
-    Height = 15
-    Top = 424
-    Width = 76
+    Left = 136
+    Height = 16
+    Top = 422
+    Width = 93
     Caption = 'Transparency: '
     ParentColor = False
   end
   object seHover: TSpinEdit
-    Left = 127
-    Height = 23
+    Left = 251
+    Height = 16
     Top = 422
     Width = 58
     MaxValue = 255
     TabOrder = 16
   end
   object seHigh: TFloatSpinEditEx
-    Left = 184
-    Height = 23
-    Top = 121
+    Left = 281
+    Height = 22
+    Top = 123
     Width = 64
     MaxLength = 0
     NumbersOnly = True
@@ -263,9 +253,9 @@ object fSysSettings: TfSysSettings
     Value = 0
   end
   object seOK: TFloatSpinEditEx
-    Left = 184
-    Height = 23
-    Top = 171
+    Left = 281
+    Height = 22
+    Top = 173
     Width = 64
     MaxLength = 0
     NumbersOnly = True
@@ -280,9 +270,9 @@ object fSysSettings: TfSysSettings
     Value = 0
   end
   object seLow: TFloatSpinEditEx
-    Left = 184
-    Height = 23
-    Top = 196
+    Left = 281
+    Height = 22
+    Top = 198
     Width = 64
     MaxLength = 0
     NumbersOnly = True
@@ -297,48 +287,197 @@ object fSysSettings: TfSysSettings
     Value = 0
   end
   object Label6: TLabel
-    Left = 184
-    Height = 15
-    Top = 149
-    Width = 56
+    Left = 279
+    Height = 16
+    Top = 150
+    Width = 66
     Caption = 'Calculated'
     Enabled = False
     ParentColor = False
   end
   object Label9: TLabel
-    Left = 154
-    Height = 15
-    Top = 124
-    Width = 23
+    Left = 251
+    Height = 16
+    Top = 126
+    Width = 27
     Caption = 'over'
     Enabled = False
     ParentColor = False
   end
   object Label10: TLabel
-    Left = 146
-    Height = 15
-    Top = 199
-    Width = 31
+    Left = 244
+    Height = 16
+    Top = 201
+    Width = 37
     Caption = 'under'
     Enabled = False
     ParentColor = False
   end
   object cbHoverColor: TCheckBox
-    Left = 40
-    Height = 19
+    Left = 136
+    Height = 18
     Hint = 'Color the font of the glucose trend'
-    Top = 451
-    Width = 92
+    Top = 448
+    Width = 102
     Caption = 'Color reading'
     TabOrder = 20
   end
   object cbHoverWindowColor: TCheckBox
-    Left = 168
-    Height = 19
+    Left = 292
+    Height = 18
     Hint = 'Color the font of the glucose trend'
-    Top = 451
-    Width = 94
+    Top = 448
+    Width = 102
     Caption = 'Color window'
     TabOrder = 21
+  end
+  object Image1: TImage
+    Left = 8
+    Height = 72
+    Top = 123
+    Width = 66
+    Picture.Data = {
+      1754506F727461626C654E6574776F726B47726170686963AA01000089504E47
+      0D0A1A0A0000000D4948445200000039000000400806000000A035DF8C000000
+      0473424954080808087C086488000000097048597300000B1300000B1301009A
+      9C180000014C494441546881ED993B4A044114454F0F932B0E9A1B98B8023F91
+      5B10610C457419660606EEC0C454D7A0B814433F818AA9F8090AB399768AA957
+      2DB7EF81CA5EBFBA078AEAD734D4611BB8069E814FE009B802362AED1FCA0038
+      07BE5BD619D07415B004A7B40BFEAE93AE02CECB3AE968CE22F901AC45051944
+      35068E32FA0F81C3A82091929B99F55B212988955CC8AC5F0C4941ACE46366FD
+      43480A62256F33EB6F425204B302BC33DBEDFA0A8CBA89393F63FE16FC0276BB
+      0A588A31F0C664C1172A08D61AA746C001B0032C9366D83BE092246A8C4934A4
+      0B409AC861E0DF6049152CA94243FA822FC545C15EC7A51A951EEB4ABE8E8A65
+      EBC571B5A40A9654C1922A5852054BAA6049152CA9822555B0A40ABD901C56DA
+      E79EC9FF219780D54A198A31ED97F9DE94FAFD96678AD18BE36A49152CA98225
+      55B0A40A9654C1922A5852054BAAD00BC91FD9CF5910DE8A0E05000000004945
+      4E44AE426082
+    }
+  end
+  object Image2: TImage
+    Left = 8
+    Height = 72
+    Top = 8
+    Width = 66
+    Picture.Data = {
+      1754506F727461626C654E6574776F726B477261706869630103000089504E47
+      0D0A1A0A0000000D4948445200000040000000400806000000AA6971DE000000
+      0473424954080808087C086488000000097048597300000B1300000B1301009A
+      9C18000002A349444154789CED9CBD6A145114C77FB3D9460B23B17485531993
+      DE575022B68AEF2062A1854A4C562C2C54F049149F42F0A30E08568A465D0B21
+      89C50A6B7177950C997B4673EF3977D7FDC1658BCC9CFFC7647676274C603FC7
+      813BC04BE03B309A91B507BC01D681251A380F0C0A309B7B0D800B0785FF5980
+      39AB3504D6002A601178079CA8B732E30C80E505E00670D1D98C0747819D05E0
+      3170D2D98C178B15E1DDFE98B71327F62AC29B421367816D2333B9E8012F9A7E
+      D85576DE063E24B5634F3463C7CA45A9CC0BF036E0CDBC006F03DE7815B042F8
+      045A04B12F0DBD0C7A2B84CBEB08E867985F478867342D60953FE127AB9F58A3
+      8E504801ABC0E7069D7E429D3AD2A0695A402C7CEE1244D13529E0AAA293B304
+      5134CD4E819B8A56AE1224A6D7052E4576FE96D0C8A3F1EB4365BBCDF16B3FA1
+      765158FF2688A2E3826509A268B861558228F35DB1284194D9EEE42E4194B945
+      90B30489CDEC024F0E653D1DEF8153CA36592E916D9A2F6DFD4D01A2CC720F93
+      BB84992DA06D09D102A6FD96D828D590695C9B2DF38932C73D48CEF06A015DC2
+      5F874BE032FA6510C2797F2FAF157B6ED1EEC86FFCC36C5166BA93333C145E40
+      EEF050700116E1A1D002DA86BF9B404B140D732CC3438BCBE095C8CECF811F89
+      8C4008FFA0C5761BC0FD84BA51624721E56D71EB233F41143D9302AE293AB9C2
+      4321059C013E295AEB89B4EA88A26B760AC44AC8151E0A2A006019F8885D7828
+      AC00D85F42EEF050600100A781EB9966D7110A2CC012219271DA6F891D9A7901
+      DE06BC9917E06DC01BED79815E8B6D4A277A25AB080F151EB1F1521CBB1D60CB
+      DB85235B1DE099B70B479E56846769DFF2FF3D38F995F0911C08CFD20E6977D3
+      6216D61038576F646DDC8AB7B9DCEBCB41E1272C11BEA2BE06760B309B6AED00
+      AF80DB847F11F09B5FEBAD6BA7D0D306460000000049454E44AE426082
+    }
+  end
+  object Image3: TImage
+    Left = 8
+    Height = 72
+    Top = 232
+    Width = 66
+    Picture.Data = {
+      1754506F727461626C654E6574776F726B477261706869631C03000089504E47
+      0D0A1A0A0000000D4948445200000040000000400806000000AA6971DE000000
+      0473424954080808087C086488000000097048597300000B1300000B1301009A
+      9C18000002BE49444154789CEDDAFDAB8F771CC7F187FB193636E6DE2F9B106B
+      A4898CB42592B4684992FC117EF457B8F907482C49224D68224D44843637919B
+      646E3673B3B98B1FBE9DA6E1EBF3BDAEEBF33E97EF3CEBFAED9CD3FBF1FAE19C
+      D3750EED5137ACC235FC83BD98D8A91705D60D9BF0FC3FCF3D7CD3897785F426
+      FCFF6284B7E1DB7A84547C5B8ED02ABEAD46288A6F9B11962B8E6F9B11D6783F
+      426523BCD3BF2C5531C29EF0AB5B688506B24B938F59ABDC000F33DD5EBAE578
+      A671E45AF946B894E5FA922DF32FBEE3C935C2CA2C82122DF52AFEE5119AD5EA
+      089B351F35BC2578AAF9D1CD46E8227D847DE8990351B4C5DE8EAF6A8413F828
+      07A2683F48C7A78EB0EE0D9F7709C332180AB7084F14FB06B6A6C9D77DDD08B7
+      313607A2680B15C7B73AC2434CCB8128DAF778AC1C3E7584D558900351B405AA
+      C3A78C50ABE6E3916AF11DCFEA4047A1E6C987AFFD087335DED7E7C4773C4B83
+      4CC9CD11875F8FAE31ACB466E36F31F80D6A86FF4EE3E76F047EA3C60BD3DAF4
+      AD38FC6635C3CFC20331F81FD13D4495D84CDC1783DFA266F819E2F05BD12386
+      95D6748DD7CC11F86D6A869F86BFC4E0B7AB197E2AEE8AC1EF50B3D75853C4E1
+      77A2570C2BADAFF1A718FC2E35C34FC61F62F03FE18318565A9370470C7EB79A
+      E1276ABC588CC0EF41EF18565A5FE19618FC3E7C18C34AEB4BDC1483FF59CDF0
+      13F0BB18FC7EF48961A5355E1CFE00FAC6B0D21A871B62F007D50C3F16D7C5E0
+      0FA15F0C2BAD31E2F0BFA8D95F69476BFCBB7904FE303E8E61A5F505AE8AC11F
+      5133FCE7B822067F14FD6358E95D16833F860141A6968AC01FC72751A056CB8D
+      3F814FC33405CA893F8981719462E5C29FC2A04047E172E04FE3B3484499AAC6
+      9FC1E05041C9AAC4FF8A21B1E797AF2AFC6F181A7C7B2555813FAB66FF81D94A
+      65F1E7303CFCEA0A2B833F8F11F127575B51FC058CEC847B2BAF08FE224675C6
+      B155F7027EF16266C3E4C99B0000000049454E44AE426082
+    }
+  end
+  object Image4: TImage
+    Left = 8
+    Height = 72
+    Top = 400
+    Width = 66
+    Picture.Data = {
+      1754506F727461626C654E6574776F726B47726170686963E202000089504E47
+      0D0A1A0A0000000D4948445200000040000000400806000000AA6971DE000000
+      0473424954080808087C086488000000097048597300000B1300000B1301009A
+      9C180000028449444154789CEDDC3D6B544114C6F1DFDE5C1009BE906811144C
+      A5085676E20708224A0A050BB115B4D0C24A7CF90211ACB4B1126C150B15AC15
+      44B4884D3E8085921835C45750D66212C8CACE889775C7CDCE1F2E2CF7ECB93C
+      E72CB3B36766CED2C9565CC4732C618738CFD08E5CC7127ED7137E3309BF1309
+      BF2709BF5DF88297B884B1B5C67ACDEB29DCC1F89A7BADC4830785163662FFCA
+      751EA7F010AA95374DE181CEE0D72BE3B88F4384046C113EF9918CA2FA4D8DDB
+      18AB70D6707CF2BFB30D672A4CE7569291E90A7B72ABC8C8DE9630D5C5BEEDDF
+      E067C4B61D1B22B6457C8DD8B66053C4B62C4CBFDDD8283E54BF6321621BC144
+      C4D68EDC2F140A85C250D012AABA1847C4A7975BD8D77345CD98C5E9886D02F7
+      52CEB112B38D9D09BF5439DCEF2B550E4FA67CABB8DF705012905B406E4A0272
+      0BC84D8DE309FB62C3E75E939E5E9B705058CFFB5BE6A5636C4CD355E1A6345D
+      154E32F443A02420B780DC9404E416909B5AD8AB8B71557C91725018C39598B1
+      C6B984F38CC14FC0668918877E089404E416909B9280DC0272530B955B8CE57E
+      09F9872C49C458E342FFB464E183448C433F044A02720BC84D49406E01B9A985
+      B5B618F7C58FBAA438A8F310662F38D0D06F54D8E38C52F60687999280DC0272
+      5312905B406E6A3C4DD8BF276CB3F8D15B398D7995B07D938EB15028140A434B
+      4BE8AB8B354CBC166F9898106F9898177AF5BA31266C5775634958C3EBC6A8D0
+      A4D18D6F781BB1D5E2455D9B20B4D7D5E0FFD4383999F0FB54612EE1BCDE99AB
+      FCE120F13AE76E851B9A1F871B641670B3C27BA197F67FF95DDF0F7EE0243EAE
+      56830F7114EFB249EA1F0B388CC77496C38F8426CACB42ABF9EAEC30E8B4F119
+      2F84BF06D86D2578F805FDC3FC915ACA08090000000049454E44AE426082
+    }
+  end
+  object btnOK1: TBitBtn
+    Left = 304
+    Height = 25
+    Top = 576
+    Width = 75
+    Caption = 'Cancel'
+    OnClick = btnOK1Click
+    OnDragDrop = btnOK1DragDrop
+    OnDragOver = btnOK1DragOver
+    TabOrder = 22
+  end
+  object CheckBox1: TCheckBox
+    Left = 112
+    Height = 18
+    Top = 488
+    Width = 284
+    Caption = 'Bounce dock icon when glucose is high/low'
+    TabOrder = 23
+  end
+  object CheckBox2: TCheckBox
+    Left = 112
+    Height = 18
+    Top = 512
+    Width = 347
+    Caption = 'If a new reading differs +1 mmol/L, do a single bounce'
+    TabOrder = 24
   end
 end

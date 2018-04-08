@@ -24,12 +24,16 @@ interface
 
 uses
   SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  intfgraphics, LCLType, StdCtrls, Buttons, PopupNotifier,
+  intfgraphics, LCLType, StdCtrls, Buttons,
   fpImage,  fphttpclient, sha1, fpjson, dateutils, jsonconf,
   lazutf8sysutils, uconfig, usys, lclintf, Menus, uhover
-  {$ifdef Windows}, mmsystem, Comobj {$endif}, Classes;
+  {$ifdef Windows}, mmsystem, Comobj{$endif}{$ifdef Darwin}, speechsynthesizer, MacOSAll, appkit, CarbonGDIObjects, carbonmenus,{$ENDIF}
+  Classes, stuff;
 
 type
+
+
+  TOSImg = TBitmap;
 
   // Settings stored in the config file
   TUserVals = record
@@ -38,6 +42,7 @@ type
     url, api, lowexec, sndhyper, sndhypo: string;
     mmol, alert, colorval, colortrend, hover, hovercolor, hoverwindowcolor, voice, voiceall, voicetrend: boolean;
     snooze, arrows, hovertrans, updates: integer;
+    mac_dock, mac_bounce, mac_bounce_once: boolean;
   end;
 
   // NightScout's possible directions/trends. Ported from the NS server source code.
@@ -46,16 +51,16 @@ type
   { TfMain }
 
   TfMain = class(TForm)
-    btnUpdate: TBitBtn;
     btConf: TBitBtn;
+    btnUpdate: TBitBtn;
     btOS: TBitBtn;
     ilBG: TImageList;
     ilFull: TImageList;
+    imMacDock: TImage;
     imTrend: TImage;
     lblSnooze: TLabel;
     lblSpeed: TLabel;
     lblTimeAgo: TLabel;
-    Label5: TLabel;
     lblTrend: TLabel;
     lblVal: TLabel;
     MenuItem1: TMenuItem;
@@ -64,16 +69,17 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
-    MenuItem7: TMenuItem;
+    miAbout: TMenuItem;
     miTrend: TMenuItem;
+    Panel1: TPanel;
     pnMain: TPopupMenu;
     pnTop: TPanel;
-    pnAlert: TPopupNotifier;
     tUpdate: TTimer;
     tTray: TTrayIcon;
     procedure btnUpdateClick(Sender: TObject);
     procedure btConfClick(Sender: TObject);
     procedure btOSClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
@@ -82,15 +88,21 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure miAboutClickA(Sender: TObject);
+    procedure tTrayClick(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
     procedure UpdateTrend(velocity: single; desc, device: string; newdate: tdatetime);
+
+
+   {$IFDEF LCLCarbon}
+     procedure SetOverlay(trend: HBitmap);
+   {$ENDIF}
   private
     procedure FetchValues;
     function CheckVesion(current: Single; prerelease: boolean): boolean;
     function GetMetric(metric: string): TJSONData;
   public
     procedure UpdateBG;
-    function SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
+    function SetUI(bgval: single; title: string; lbl: tlabel; img: tosimg; smallimg: ticon): tcolor;
     function FormatBG(val: single; short: boolean): string;
     function ConvertBGUnit(val: single; ismmol: boolean): single;
     procedure LoadCFG;
@@ -167,13 +179,13 @@ begin
   except
     on E: Exception do begin
     if code = 401 then
-      ShowMessage('Your credentials (API token) appears to be wrong, please verify your configuration. (Error 401)')
+      ttMsg('Your credentials (API token) appears to be wrong, please verify your configuration. (Error 401)')
     else if code = 400 then
-      ShowMessage('Nightscout can''t understand our request. Either Nightscout is malfunctioning or you have not entered the address correctly. (Error 400)')
+      ttMsg('Nightscout can''t understand our request. Either Nightscout is malfunctioning or you have not entered the address correctly. (Error 400)')
     else if code = 404 then
-      ShowMessage('No system appears to exist at the NightScout address you have specified. (Error 404)')
+      ttMsg('No system appears to exist at the NightScout address you have specified. (Error 404)')
     else
-       ShowMessage('A netowork error occured: ' + E.Message + LineEnding + 'A new attempt will be made momentarily');
+       ttMsg('A netowork error occured: ' + E.Message + LineEnding + 'A new attempt will be made momentarily');
     end;
   end;
 end;
@@ -220,7 +232,8 @@ var
   tdate: TDateTime;
 begin
   // Contact the API over SSL
-  lblTimeAgo.Caption:= 'Updating now';
+  lblTimeAgo.Caption:= 'Getting new values';
+  lblTimeAgo.Color := $006D686B;
   Application.ProcessMessages;
   res := GetMetric('entries');
 
@@ -266,12 +279,17 @@ begin
   datediff := MinutesBetween(NowUTC, newdate);
 
   // But we dont want to display 120 minutes, 2 hours is better etc
-  if datediff <= 60 then
-    lblTimeAgo.Caption := Format('%d minute(s) ago', [datediff])
-  else if datediff >= 1440 then
-    lblTimeAgo.Caption := Format('%d day(s) ago', [DaysBetween(NowUTC, newdate)])
-  else
-    lblTimeAgo.Caption := Format('%d hour(s) ago', [HoursBetween(NowUTC, newdate)]);
+  if datediff <= 60 then begin
+    lblTimeAgo.Caption := Format('%d min', [datediff]);
+    lblTimeAgo.Color := clBlack;
+  end else if datediff >= 1440 then begin
+    lblTimeAgo.Caption := Format('%d day(s)', [DaysBetween(NowUTC, newdate)]);
+    lblTimeAgo.Color := clRed;
+  end else begin
+    lblTimeAgo.Caption := Format('%d hrs', [HoursBetween(NowUTC, newdate)]);
+    lblTimeAgo.Color := clMaroon;
+  end;
+// lblTimeAgo.Left := lblSpeed.Left-lblTimeAgo.Width-5;
 
   // We set the full time as a hint if one hovers the time label
   lblTimeAgo.Hint := DateTimeToStr(newdate);
@@ -354,6 +372,10 @@ begin
      cfg.voicetrend := cfgf.GetValue('/glucose/voicetrend', false);
      cfg.voiceall := cfgf.GetValue('/glucose/voiceall', false);
 
+     cfg.mac_dock := cfgf.GetValue('/mac/dock', true);
+     cfg.mac_bounce := cfgf.GetValue('/mac/bounce', true);
+     cfg.mac_bounce_once := cfgf.GetValue('/mac/bounce_once', true);
+
 
      cfgf.free;
   except
@@ -395,10 +417,42 @@ begin
   end;
 end;
 
+{$IFDEF LCLCarbon}
+procedure TfMain.SetOverlay(trend: HBitmap);
+var
+  temp_trend: TCarbonBitmap;
+  temp_CGImage: CGImageRef;
+  temp_CGContext: CGContextRef;
+begin
+try
+
+    temp_trend := TCarbonBitmap.Create(TCarbonBitmap(trend));
+    temp_CGImage := temp_trend.CGImage;
+    temp_CGContext := BeginCGContextForApplicationDockTile;
+    SetApplicationDockTileImage(temp_CGImage);
+   // OverlayApplicationDockTileImage(temp_CGImage);
+  //We dont do this when we use a TCarbonBitmap origin  CGImageRelease(temp_CGImage);
+    EndCGContextForApplicationDockTile(temp_CGContext);
+    temp_trend.Free;
+except on E: Exception do
+    ShowMessage('An error occured while trying to set the glucose value in the tray' + E.Message);
+ end;
+end;
+{$ENDIF}
+
 procedure TfMain.FormCreate(Sender: TObject);
 begin
   // Make sure the splash is showing
   Application.ProcessMessages;
+
+  // macOS integration
+  {$IFDEF LCLCarbon}
+   NsApp := NSApplication.sharedApplication;
+   MenuItem5.Visible := false;
+   MenuItem6.Visible := false;
+   SetApplicationDockTileMenu(TCarbonMenu(pnMain.handle).menu);
+  // NsApp.o
+  {$ENDIF}
 
   // Load settings
   LoadCFG;
@@ -439,6 +493,9 @@ end;
 
 procedure TfMain.FormShow(Sender: TObject);
 begin
+{$ifdef Darwin}
+  BorderStyle:=bsToolWindow;
+{$endif}
   if fHover.Visible then
     fHover.Hide; // We need to trigger "Show" to make the window look right anyways
 
@@ -465,7 +522,7 @@ begin
   if (assigned(fhover)) and (WindowState = wsMinimized) then begin
      WindowState := wsNormal;
      Hide;
-     ShowMessage('Double-click the floating window to show TrayTrend again!');
+     ttMsg('Double-click the floating window to show TrayTrend again!');
   end;
 end;
 
@@ -473,6 +530,8 @@ end;
 procedure TfMain.MenuItem1Click(Sender: TObject);
 begin
   Show;
+  WindowState := wsNormal;
+  ShowInTaskBar := stDefault;
   BringToFront;
 end;
 
@@ -493,13 +552,18 @@ end;
 
 procedure TfMain.miAboutClickA(Sender: TObject);
 begin
-  ShowMessage('TrayTrend is a desktop monitor for the NightScout system, licensed under the GNU Public License v3. Original work by Björn Lindh: github.com/slicke');
+  ttMsg('TrayTrend is a desktop monitor for the NightScout system, licensed under the GNU Public License v3. Original work by Björn Lindh: github.com/slicke');
+end;
+
+procedure TfMain.tTrayClick(Sender: TObject);
+begin
+
 end;
 
 // Update the readings when needed
 procedure TfMain.tUpdateTimer(Sender: TObject);
 begin
-  UpdateBG;
+UpdateBG;
 end;
 
 procedure TfMain.btnUpdateClick(Sender: TObject);
@@ -582,6 +646,20 @@ begin
   FormShow(self);
 end;
 
+procedure TfMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  if Visible then begin
+    ttAlert('TrayTrend has been minimized, but is still running. Click the tray icon to restore.', imTrend.Picture.Bitmap);
+    WindowState := wsNormal;
+    Hide;
+    ShowInTaskBar := stNever;
+    CloseAction := caNone;// caHide;
+  end else begin
+    CloseAction := caFree;
+    Application.Terminate;
+  end;
+end;
+
 // Get a good readable color based on the background
 function GetHoverColor(const AColor: TColor): TColor;
 var
@@ -608,31 +686,47 @@ begin
 end;
 
 // Paint the graphical things
-function TfMain.SetUI(bgval: single; title: string; lbl: tlabel; img, smallimg: ticon; notifi: TPopupNotifier): tcolor;
+function TfMain.SetUI(bgval: single; title: string; lbl: tlabel; img: tosimg; smallimg: ticon): tcolor;
 var
   i: integer;
   snoozed: int64;
   tr: TBGTrend;
-  voice: OLEVariant;
-  SavedCW: Word;
-  speech: widestring;
+  {$ifdef Windows}
+    voice: OLEVariant;
+    SavedCW: Word;
+    speech: widestring;
+  {$endif}
+  {$ifdef Darwin}
+    speech: string;
+    ss: TSpeechSynthesizer;
+  {$endif}
 begin
   // Parse the trend and handle none
   if title= '' then begin
     tr := NO_DATA;
     lblVal.Font.Color:=clNone;
     lbl.Caption := GetTrendName(tr);
-    imTrend.Picture.Clear;
-    {$ifdef windows}
-    try
-    voice := CreateOLEObject('SAPI.SpVoice');
-    if cfg.voice then
-        voice.Speak('TrayTrend has not recieved any glucose reading', 0);
-    voice := Unassigned;
-    finally
+    //imTrend.Picture.Clear;
+    if cfg.voice or cfg.voiceall then begin
+      {$ifdef windows}
+      try
+      voice := CreateOLEObject('SAPI.SpVoice');
+      if cfg.voice then
+          voice.Speak('TrayTrend has not recieved any glucose reading', 0);
       voice := Unassigned;
+      finally
+        voice := Unassigned;
+      end;
+      {$endif}
+      {$ifdef darwin }
+      try
+        ss := TSpeechSynthesizer.Create;
+        ss.StartSpeakingString('TrayTrend has not recieved any glucose reading');
+      finally
+        ss.Free;
+      end;
+      {$endif}
     end;
-    {$endif}
     Exit;
   end;
 
@@ -657,12 +751,12 @@ begin
   // Only handle the hover window if it's assigned/created
   if assigned(fHover) then
     fHover.lblTrend.Font.Color := $00F2F2F2;
-    if cfg.colortrend then
-       lbl.Font.Color := result;
-    if cfg.colorval then
-       lblVal.Font.Color := result;
-    if (cfg.hoverwindowcolor) and assigned(fHover) then begin
-       fHover.Color := result;
+  if cfg.colortrend then
+     lbl.Font.Color := result;
+  if cfg.colorval then
+     lblVal.Font.Color := result;
+  if (cfg.hoverwindowcolor) and assigned(fHover) then begin
+     fHover.Color := result;
 
     // Set the text colors so they're visible
     fHover.lblVal.Font.Color := GetHoverColor(result);
@@ -675,8 +769,13 @@ begin
     end;
 
     // Set icons
+    {$ifdef Darwin}
+    ilBG.GetIcon(i, smallimg);
+    ilFull.GetBitmap(i, img);
+    {$else}
     ilBG.GetIcon(i, smallimg);
     ilFull.GetIcon(i, img);
+    {$endif}
 
     // Manage notifications
     if (bgval > cfg.hyper) or (bgval < cfg.hypo) then begin
@@ -685,11 +784,8 @@ begin
         sndPlaySound(pchar(cfg.sndhyper), snd_Async or snd_NoDefault)
       else if (bgval < cfg.hypo) and (cfg.sndhypo <> '') then
         sndPlaySound(pchar(cfg.sndhypo), snd_Async or snd_NoDefault);
+    {$endif} // Fix macOS/linux later
 
-      // Change FPU interrupt mask to avoid SIGFPE exceptions
-      SavedCW := Get8087CW;
-
-      try
         // Do text-to-speech strings and talk
         if cfg.voice then begin
 
@@ -703,36 +799,57 @@ begin
 
         if (bgtrend <> 'Steady') and (cfg.voicetrend) then
            speech := speech+' Glucose trend is '+ lbl.Caption+'.';
-
-        voice := CreateOLEObject('SAPI.SpVoice');
-        Set8087CW(SavedCW or $4);
-        if speech <> '' then
-           voice.Speak('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]), 1);
-
+        {$ifdef Windows}
+        try
+          // Change FPU interrupt mask to avoid SIGFPE exceptions
+          SavedCW := Get8087CW;
+          voice := CreateOLEObject('SAPI.SpVoice');
+          Set8087CW(SavedCW or $4);
+          if speech <> '' then
+            voice.Speak('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]), 1);
+          end;
+        finally
+          // Restore FPU mask
+          Set8087CW(SavedCW);
+          voice:=Unassigned;
         end;
-      finally
-        // Restore FPU mask
-        Set8087CW(SavedCW);
-        voice:=Unassigned;
-      end;
+    {$endif}
+    {$ifdef darwin }
+    try
+      ss := TSpeechSynthesizer.Create('Ava');
+      if speech <> '' then
+         ss.StartSpeakingString('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]));
+    finally
+      ss.Free;
+    end;
     {$endif}
 
+
     // Show an alert if not snoozed
-    if (assigned(notifi)) and (snoozed >= cfg.snooze) then begin
-      ilFull.GetIcon(i, notifi.Icon.Icon);
-      notifi.Text := lbl.Caption+' - '+lblTimeAgo.caption+LineEnding+LineEnding+'Current value: ' + FormatBG(bgval, false)+LineEnding+'Last value: '+FormatBG(lastbg, false);
-      notifi.Show;
+    if snoozed >= cfg.snooze then begin
+     // ilFull.GetIcon(i, notifi.Icon.Icon);
+      ttAlert(lbl.Caption+' - '+lblTimeAgo.caption+LineEnding+LineEnding+'Current value: ' + FormatBG(bgval, false)+LineEnding+'Last value: '+FormatBG(lastbg, false), imTrend.Picture.Bitmap);
+      //notifi.Show;
       lastalert := tr;
       lastalertts := Now;
+      {$IFDEF LCLCarbon}
+      if cfg.mac_bounce then
+        NSApp.requestUserAttention(NSCriticalRequest);
+      {$ENDIF}
 
-      lblSnooze.Caption := '(snoozing next alert for '+inttostr(cfg.snooze)+ ' minutes)';
+      lblSnooze.Caption := '[Alerts snoozed for '+inttostr(cfg.snooze)+ ' min]';
     end else if (snoozed < cfg.snooze) then // Add a note that we're snoozing
-          lblSnooze.Caption := '(alert snoozed '+ inttostr(cfg.snooze-snoozed)+' minutes)';
+          lblSnooze.Caption := '[Alerts snoozed for '+ inttostr(cfg.snooze-snoozed)+' min]';
     end else begin
     // If we're not high or low, we can clear any alerts
       lastalert := NONE;
       lastalertts := Now;
       lblSnooze.Caption := '';
+      {$IFDEF LCLCarbon}
+      if cfg.mac_bounce_once then
+         NSApp.requestUserAttention(NSInformationalRequest);
+      {$ENDIF}
+    end;
   end;
 end;
 
@@ -771,15 +888,16 @@ var
   TempIntfImg: TLazIntfImage;
   ImgHandle, ImgMaskHandle: HBitmap;
   w, h: Integer;
-  TempBitmap: TBitmap;
+  TempBitmap{$ifdef Darwin}, macbitmap: TBitmap{$endif};
   bgarrow: ticon;
   bgcolor: tcolor;
+  bgreading: string;
 
 begin
   try
     FetchValues;
   except
-    ShowMessage('Error contacting NightScout');
+    ttMsg('Error contacting NightScout');
     Exit;
   end;
 
@@ -792,7 +910,11 @@ begin
     TempBitMap.SetSize(w, h);
     TempBitMap.Canvas.Brush.Style:=bsSolid;
     bgarrow := tIcon.Create;
-    bgcolor := SetUI(bgval, bgtrend, lbltrend, imTrend.Picture.Icon, bgarrow, pnAlert);
+    {$ifdef Darwin}
+    bgcolor := SetUI(bgval, bgtrend, lbltrend, imTrend.Picture.Bitmap, bgarrow);
+    {$else}
+    bgcolor := SetUI(bgval, bgtrend, lbltrend, imTrend.Picture.Icon, bgarrow);
+    {$endif}
     TempBitMap.Canvas.Brush.Color := bgcolor;
     TempBitMap.Canvas.FillRect(0, 0, w, h);
     TempBitMap.Canvas.Font:=Canvas.Font;
@@ -808,6 +930,9 @@ begin
 //    TempBitMap.Canvas.TextOut(0,10,GetUTFArrow(lastbgtrend));//0,0,'10.2');
     miTrend.ImageIndex := ord(lastbgtrend);
     imTrend.Caption := FormatBG(bgval, true) + lblTrend.Caption;
+     {$ifdef DARWIN}
+     miTrend.Caption := imTrend.Caption;
+     {$endif}
 
     TempIntfImg.LoadFromBitmap(TempBitmap.Handle, TempBitmap.MaskHandle);
 
@@ -818,6 +943,39 @@ begin
 
     tTray.Icon.Assign(TempBitmap);
     tTray.Show;
+    {$ifdef Darwin}
+    try
+      macBitmap := TBitmap.Create;
+      macBitmap.Width := imMacDock.Picture.Bitmap.Width;
+      macBitmap.Height := imMacDock.Picture.Bitmap.Height;
+     // macBitmap.TransparentMode := tmFixed;
+   //   macbitmap.TransparentColor:=clWhite;
+    //  macbitmap.Transparent:=true;
+
+
+      macbitmap.Canvas.brush.Style := bsClear;
+     // macbitmap.Canvas.FillRect(0, 0, macbitmap.Width, macbitmap.Height) ;
+      macBitmap.Canvas.Draw(0,0, imMacDock.Picture.Bitmap);
+
+      bgreading := FormatBG(bgval, true);
+
+      macBitmap.Canvas.Font.Color := bgcolor;
+      macbitmap.Canvas.Font.size := 100;
+      macbitmap.Canvas.Font.Name := 'Verdana';
+      macbitmap.Canvas.Font.Quality := fqAntialiased;
+      macBitMap.Canvas.TextOut(round((macbitmap.Canvas.width-2-macbitmap.canvas.TextWidth(bgreading))/2), 1 , bgreading);
+
+
+      if cfg.mac_dock then
+        SetOverlay(macBitmap.Handle);
+    except on e: exception do begin
+      cfg.mac_dock:=false;
+      ttmsg('Glucose level will not show on the dock, due to an error: ' + E.Message);
+    end;
+    end;
+
+    {$endif}
+
 
     if assigned(fHover) then begin
       fHover.lblVal.Caption := FormatBG(bgval, true);
@@ -827,6 +985,9 @@ begin
   finally
     TempIntfImg.Free;
     TempBitmap.Free;
+    {$ifdef Darwin}
+      macbitmap.free;
+    {$endif}
   end;
   lblVal.caption := FormatBG(bgval, false);
   lblTrend.Width := lblVal.Width;

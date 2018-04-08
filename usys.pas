@@ -24,7 +24,7 @@ interface
 
 uses
   SysUtils, SpinEx, Forms, Controls, Dialogs,
-  EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf, buttons;
+  EditBtn, StdCtrls, ExtCtrls, ComCtrls, Spin, jsonConf, buttons, Classes, stuff;
 
 type
 
@@ -32,6 +32,7 @@ type
 
   TfSysSettings = class(TForm)
     btnOK: TBitBtn;
+    btnOK1: TBitBtn;
     cbArrowRight: TRadioButton;
     cbArrowMix: TRadioButton;
     cbHoverWindowColor: TCheckBox;
@@ -42,12 +43,17 @@ type
     cbValue: TCheckBox;
     cbTrend: TCheckBox;
     cbHover: TCheckBox;
+    CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
     Label10: TLabel;
     Label6: TLabel;
     Label9: TLabel;
     seHigh: TFloatSpinEditEx;
     fnRun: TFileNameEdit;
-    Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -64,6 +70,10 @@ type
     seLow: TFloatSpinEditEx;
     seHover: TSpinEdit;
     tbSnooze: TTrackBar;
+    procedure btnOK1Click(Sender: TObject);
+    procedure btnOK1DragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure btnOK1DragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
     procedure btnOKClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
     procedure pnHighClick(Sender: TObject);
@@ -121,7 +131,7 @@ begin
        c.setValue('/gui/arrows', 0);
 
      if t <> c.GetValue('/gui/arrows', 0) then
-       ShowMessage('Arrows changes will take effect after the next restart.');
+       ttMsg('Arrows changes will take effect after the next restart.');
 
      c.SetValue('/gui/hover', cbHover.Checked);
      c.SetValue('/gui/hovertrans', seHover.Value);
@@ -152,6 +162,22 @@ begin
   c.free;
   Close;
 
+end;
+
+procedure TfSysSettings.btnOK1DragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+
+end;
+
+procedure TfSysSettings.btnOK1DragDrop(Sender, Source: TObject; X, Y: Integer);
+begin
+
+end;
+
+procedure TfSysSettings.btnOK1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 // Enable the box if the feature is checked

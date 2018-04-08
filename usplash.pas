@@ -24,7 +24,7 @@ interface
 
 uses
   Forms, Controls, StdCtrls,
-  ExtCtrls;
+  ExtCtrls, ComCtrls;
 
 type
 
@@ -32,9 +32,8 @@ type
 
   TSplash = class(TForm)
     Image1: TImage;
-    Label1: TLabel;
-    Label3: TLabel;
-    Panel1: TPanel;
+    Label2: TLabel;
+    ProgressBar1: TProgressBar;
   private
 
   public

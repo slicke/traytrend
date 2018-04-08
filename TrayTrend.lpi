@@ -47,7 +47,7 @@
               <DebugInfoType Value="dsDwarf2Set"/>
               <UseHeaptrc Value="True"/>
               <TrashVariables Value="True"/>
-              <UseExternalDbgSyms Value="True"/>
+              <UseValgrind Value="True"/>
             </Debugging>
             <Options>
               <Win32>
@@ -105,7 +105,7 @@
         <PackageName Value="LCL"/>
       </Item2>
     </RequiredPackages>
-    <Units Count="7">
+    <Units Count="12">
       <Unit0>
         <Filename Value="TrayTrend.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -150,6 +150,34 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit6>
+      <Unit7>
+        <Filename Value="uinfo.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fInfo"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="uInfo"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="stuff.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="speechsynthesizer.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="ualert.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fAlert"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="osxutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="OSXUtils"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

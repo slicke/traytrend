@@ -16,33 +16,50 @@
 
  (c) 2018 Björn Lindh - https://github.com/slicke/traytrend
 *)
-program TrayTrend;
+unit uInfo;
 
 {$mode objfpc}{$H+}
 
+interface
+
 uses
-  {$IFDEF UNIX}{$IFDEF UseCThreads}
-  cthreads,
-  {$ENDIF}{$ENDIF}
-  Interfaces, // this includes the LCL widgetset
-  Forms, lazcontrols, umain, uconfig, usplash, usys, uhover, uInfo, stuff,
-  ualert, OSXUtils
-  { you can add units after this };
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Buttons, ExtCtrls;
 
-{$R *.res}
+type
 
+  { TfInfo }
+
+  TfInfo = class(TForm)
+    btn: TBitBtn;
+    logo: TImage;
+    mTxt: TMemo;
+    procedure btnClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+  private
+
+  public
+
+  end;
+
+var
+  fInfo: TfInfo;
+
+implementation
+
+{$R *.lfm}
+
+{ TfInfo }
+
+procedure TfInfo.btnClick(Sender: TObject);
 begin
-  Splash := TSplash.Create(nil);
-  RequireDerivedFormResource:=True;
-  Application.Initialize;
-  splash.show;
-  Application.CreateForm(TfMain, fMain);
-  Application.CreateForm(TfSettings, fSettings);
-  if assigned(Splash) then
-    Splash.Close;
-  splash.free;
-  Application.CreateForm(TfSysSettings, fSysSettings);
-  Application.CreateForm(TfHover, fHover);
-  Application.Run;
+  Close;
+end;
+
+procedure TfInfo.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  CloseAction := caFree;
+end;
+
 end.
 
