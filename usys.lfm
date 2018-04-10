@@ -1,18 +1,19 @@
 object fSysSettings: TfSysSettings
-  Left = 1188
+  Left = 1111
   Height = 613
-  Top = 74
+  Top = 499
   Width = 475
   BorderIcons = [biSystemMenu]
   BorderStyle = bsToolWindow
   Caption = 'System Settings'
   ClientHeight = 613
   ClientWidth = 475
+  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.8.2.0'
   object fnRun: TFileNameEdit
     Left = 136
-    Height = 23
+    Height = 22
     Top = 32
     Width = 256
     FilterIndex = 0
@@ -26,19 +27,19 @@ object fSysSettings: TfSysSettings
   end
   object cbrun: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Top = 8
-    Width = 284
+    Width = 312
     Caption = 'Run program/command when low (<2.9 mmol/L)'
     OnChange = cbrunChange
     TabOrder = 1
   end
   object cbNotice: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Hint = 'Pop-up a message on alerts'
     Top = 56
-    Width = 133
+    Width = 150
     Caption = 'Show pop-up notices'
     Checked = True
     State = cbChecked
@@ -66,17 +67,17 @@ object fSysSettings: TfSysSettings
   end
   object Label2: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 125
-    Width = 70
+    Width = 82
     Caption = 'High glucose'
     ParentColor = False
   end
   object Label3: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 150
-    Width = 114
+    Width = 136
     Caption = 'Close to high glucose'
     ParentColor = False
   end
@@ -93,9 +94,9 @@ object fSysSettings: TfSysSettings
   end
   object Label4: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 175
-    Width = 61
+    Width = 72
     Caption = 'OK Glucose'
     ParentColor = False
   end
@@ -112,9 +113,9 @@ object fSysSettings: TfSysSettings
   end
   object Label5: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 200
-    Width = 66
+    Width = 77
     Caption = 'Low glucose'
     ParentColor = False
   end
@@ -131,10 +132,10 @@ object fSysSettings: TfSysSettings
   end
   object cbOnTop: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Hint = 'Don''t allow the main window to be placed behind other apps'
     Top = 256
-    Width = 186
+    Width = 211
     Caption = 'Try to stay on top of other apps'
     TabOrder = 8
   end
@@ -151,85 +152,85 @@ object fSysSettings: TfSysSettings
   end
   object lblSnooze: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 288
-    Width = 78
+    Width = 94
     Caption = 'Snoooze time: '
     ParentColor = False
   end
   object cbValue: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Hint = 'Color the font of the glucose reading'
     Top = 232
-    Width = 124
+    Width = 140
     Caption = 'Color glucose value'
     TabOrder = 10
   end
   object cbTrend: TCheckBox
     Left = 278
-    Height = 19
+    Height = 18
     Hint = 'Color the font of the glucose trend'
     Top = 232
-    Width = 102
+    Width = 115
     Caption = 'Color trend text'
     TabOrder = 11
   end
   object Label7: TLabel
     Left = 112
-    Height = 15
+    Height = 16
     Top = 344
-    Width = 65
+    Width = 78
     Caption = 'Arrows face:'
     ParentColor = False
   end
   object cbArrowLeft: TRadioButton
     Left = 112
-    Height = 19
+    Height = 18
     Hint = 'The pointy end of the trend arrow is always left'
     Top = 360
-    Width = 65
+    Width = 72
     Caption = 'Both left'
     TabOrder = 12
   end
   object cbArrowRight: TRadioButton
     Left = 216
-    Height = 19
+    Height = 18
     Hint = 'The pointy end of the trend arrow is always right'
     Top = 360
-    Width = 73
+    Width = 81
     Caption = 'Both right'
     TabOrder = 13
   end
   object cbArrowMix: TRadioButton
     Left = 312
-    Height = 19
+    Height = 18
     Hint = 'The pointy end of the trend arrow is right when glucose is high, left when low'
     Top = 360
-    Width = 119
+    Width = 132
     Caption = 'High right, low left'
     TabOrder = 14
   end
   object cbHover: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Hint = 'Show a semi-transparent discrete window with glucose info, which you can drag over the screen'
     Top = 400
-    Width = 291
+    Width = 329
     Caption = 'Show a transparent, hovering, window with reading'
     TabOrder = 15
   end
   object Label8: TLabel
     Left = 136
-    Height = 15
+    Height = 16
     Top = 422
-    Width = 76
+    Width = 93
     Caption = 'Transparency: '
     ParentColor = False
   end
   object seHover: TSpinEdit
     Left = 251
-    Height = 23
+    Height = 16
     Top = 422
     Width = 58
     MaxValue = 255
@@ -237,7 +238,7 @@ object fSysSettings: TfSysSettings
   end
   object seHigh: TFloatSpinEditEx
     Left = 281
-    Height = 23
+    Height = 22
     Top = 123
     Width = 64
     MaxLength = 0
@@ -254,7 +255,7 @@ object fSysSettings: TfSysSettings
   end
   object seOK: TFloatSpinEditEx
     Left = 281
-    Height = 23
+    Height = 22
     Top = 173
     Width = 64
     MaxLength = 0
@@ -271,7 +272,7 @@ object fSysSettings: TfSysSettings
   end
   object seLow: TFloatSpinEditEx
     Left = 281
-    Height = 23
+    Height = 22
     Top = 198
     Width = 64
     MaxLength = 0
@@ -288,46 +289,46 @@ object fSysSettings: TfSysSettings
   end
   object Label6: TLabel
     Left = 279
-    Height = 15
+    Height = 16
     Top = 150
-    Width = 56
+    Width = 66
     Caption = 'Calculated'
     Enabled = False
     ParentColor = False
   end
   object Label9: TLabel
     Left = 251
-    Height = 15
+    Height = 16
     Top = 126
-    Width = 23
+    Width = 27
     Caption = 'over'
     Enabled = False
     ParentColor = False
   end
   object Label10: TLabel
     Left = 244
-    Height = 15
+    Height = 16
     Top = 201
-    Width = 31
+    Width = 37
     Caption = 'under'
     Enabled = False
     ParentColor = False
   end
   object cbHoverColor: TCheckBox
     Left = 136
-    Height = 19
+    Height = 18
     Hint = 'Color the font of the glucose trend'
     Top = 448
-    Width = 92
+    Width = 102
     Caption = 'Color reading'
     TabOrder = 20
   end
   object cbHoverWindowColor: TCheckBox
     Left = 292
-    Height = 19
+    Height = 18
     Hint = 'Color the font of the glucose trend'
     Top = 448
-    Width = 94
+    Width = 102
     Caption = 'Color window'
     TabOrder = 21
   end
@@ -464,19 +465,19 @@ object fSysSettings: TfSysSettings
     OnDragOver = btnOK1DragOver
     TabOrder = 22
   end
-  object CheckBox1: TCheckBox
+  object cbBouce: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Top = 488
-    Width = 253
+    Width = 284
     Caption = 'Bounce dock icon when glucose is high/low'
     TabOrder = 23
   end
-  object CheckBox2: TCheckBox
+  object cbBounceOne: TCheckBox
     Left = 112
-    Height = 19
+    Height = 18
     Top = 512
-    Width = 309
+    Width = 347
     Caption = 'If a new reading differs +1 mmol/L, do a single bounce'
     TabOrder = 24
   end

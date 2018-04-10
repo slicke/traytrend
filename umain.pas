@@ -249,7 +249,8 @@ begin
     if (res.Items[0].FindPath('tag_name').AsString <> ver) then
           if MessageDlg('New version released', 'A new version of TrayTrend is available!'+LineEnding+LineEnding+'TrayTrend ' + res.Items[0].FindPath('tag_name').AsString+' has been released. You are currently using '+ver+'.'+LineEnding+'Would you like to get information about the new version?', mtConfirmation,  [mbYes, mbNo], 0) = mrYes then
                openurl(res.Items[0].FindPath('html_url').AsString);
-  finally
+  except
+      ttMsg('Update check failed!', 'We were not able to check for updates! You should check out github.com/slicke/traytrend for updates!')
   end;
 end;
 

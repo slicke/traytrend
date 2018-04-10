@@ -43,8 +43,8 @@ type
     cbValue: TCheckBox;
     cbTrend: TCheckBox;
     cbHover: TCheckBox;
-    CheckBox1: TCheckBox;
-    CheckBox2: TCheckBox;
+    cbBouce: TCheckBox;
+    cbBounceOne: TCheckBox;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
@@ -76,6 +76,7 @@ type
       State: TDragState; var Accept: Boolean);
     procedure btnOKClick(Sender: TObject);
     procedure cbrunChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure pnHighClick(Sender: TObject);
     procedure tbSnoozeChange(Sender: TObject);
   private
@@ -153,6 +154,12 @@ begin
      c.SetValue('/glucose/low', round(seLow.Value));
      c.SetValue('/glucose/ok', round(seOk.Value));
   end;
+
+     // Not changeable ATM
+     c.SetValue('/mac/dock', true);
+     c.SetValue('/mac/bounce', cbBouce.Checked);
+     c.SetValue('/mac/bounce_once', cbBounceOne.Checked);
+
   except
    MessageDlg('Error', 'Could not load, or create, the configuration file. Please make sure your AppData folder is writeable.', mtError,
     [mbOK],0);
@@ -184,6 +191,21 @@ end;
 procedure TfSysSettings.cbrunChange(Sender: TObject);
 begin
   fnRun.Enabled := cbrun.Checked;
+end;
+
+procedure TfSysSettings.FormShow(Sender: TObject);
+begin
+ {$ifndef Darwin}
+  with cbBouce do begin
+    Enabled := False;
+    caption := 'macOS only: Dock icon alert';
+  end;
+
+  with cbBouceOnce do begin
+    Enabled := False;
+    caption := 'macOS only: Dock icon warning'
+  end;
+ {$endif}
 end;
 
 // Color pickers for the different value limits

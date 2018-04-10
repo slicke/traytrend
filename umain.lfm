@@ -1,7 +1,7 @@
 object fMain: TfMain
-  Left = 373
+  Left = 863
   Height = 106
-  Top = 331
+  Top = 912
   Width = 369
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
@@ -41,9 +41,9 @@ object fMain: TfMain
       TabOrder = 0
       object lblTimeAgo: TLabel
         Left = 157
-        Height = 15
+        Height = 16
         Top = 0
-        Width = 32
+        Width = 38
         Alignment = taRightJustify
         Caption = ' ? min'
         Color = 7170155
@@ -56,14 +56,27 @@ object fMain: TfMain
       end
       object lblSpeed: TLabel
         Left = 3
-        Height = 15
+        Height = 16
         Top = 0
-        Width = 64
+        Width = 75
         Caption = '+?? mmol/L'
         Font.Color = 14408667
         ParentColor = False
         ParentFont = False
       end
+    end
+    object lblTrend: TLabel
+      Left = 72
+      Height = 16
+      Top = 2
+      Width = 96
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = 'No trend'
+      Font.Height = -13
+      ParentBidiMode = False
+      ParentColor = False
+      ParentFont = False
     end
     object lblSnooze: TLabel
       Left = 106
@@ -81,9 +94,9 @@ object fMain: TfMain
     end
     object lblVal: TLabel
       Left = 120
-      Height = 45
+      Height = 39
       Top = 32
-      Width = 166
+      Width = 179
       Caption = '??? mmol/L'
       Font.Color = clScrollBar
       Font.Height = -33
@@ -1167,19 +1180,6 @@ object fMain: TfMain
       }
       Visible = False
     end
-    object lblTrend: TLabel
-      Left = 72
-      Height = 16
-      Top = 0
-      Width = 96
-      Alignment = taRightJustify
-      AutoSize = False
-      Caption = 'No trend'
-      Font.Height = -13
-      ParentBidiMode = False
-      ParentColor = False
-      ParentFont = False
-    end
   end
   object btOS: TBitBtn
     Left = 24
@@ -2150,8 +2150,8 @@ object fMain: TfMain
   object ilFull: TImageList
     Height = 64
     Width = 64
-    left = 240
-    top = 40
+    left = 232
+    top = 8
     Bitmap = {
       4C690B0000004000000040000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
@@ -7797,7 +7797,6 @@ object fMain: TfMain
   object pnMain: TPopupMenu
     Images = ilBG
     left = 200
-    top = 40
     object miTrend: TMenuItem
       Caption = 'TREND'
       Enabled = False
@@ -7905,13 +7904,6 @@ object fMain: TfMain
     object miAbout: TMenuItem
       Caption = 'About TrayTrend'
       OnClick = miAboutClickA
-    end
-    object MenuItem7: TMenuItem
-      Caption = '-'
-    end
-    object miExit: TMenuItem
-      Caption = 'Exit TrayTrend'
-      OnClick = miExitClick
     end
   end
 end
