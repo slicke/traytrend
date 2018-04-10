@@ -203,8 +203,8 @@ function tfMain.CheckVesion(current: Single; prerelease: boolean): boolean;
 const
   f1 = {$ifdef CPUX86_64}'ssleay32.dll'{$else}'libssl32.dll'{$endif};
   f2 = {$ifdef CPUX86_64}'libeay32.dll'{$else}'libeay32.dll'{$endif};
-var
 {$endif}
+var
   ans, ver : string;
   res:TJSONData;
   tmpfs: TFormatSettings;
@@ -232,8 +232,8 @@ begin
         ShowMessage('We didn''t get it!');
       end else
        ShowMessage('You will not be able to use https addresses!');
+    end;
       {$endif}
-  end;
  end;
 
   if ans = '' then
