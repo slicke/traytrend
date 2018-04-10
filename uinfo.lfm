@@ -1,7 +1,7 @@
 object fInfo: TfInfo
-  Left = 822
+  Left = 926
   Height = 83
-  Top = 803
+  Top = 835
   Width = 378
   BorderIcons = [biSystemMenu]
   Caption = 'fInfo'

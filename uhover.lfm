@@ -1,7 +1,7 @@
 object fHover: TfHover
-  Left = 825
+  Left = 1233
   Height = 53
-  Top = 560
+  Top = 839
   Width = 120
   BorderIcons = [biSystemMenu]
   BorderStyle = bsNone

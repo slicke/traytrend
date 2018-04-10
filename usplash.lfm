@@ -1,7 +1,7 @@
 object Splash: TSplash
-  Left = 1013
+  Left = 1444
   Height = 116
-  Top = 714
+  Top = 814
   Width = 303
   BorderStyle = bsNone
   Caption = 'Splash'
@@ -153,9 +153,9 @@ object Splash: TSplash
   end
   object Label2: TLabel
     Left = 112
-    Height = 16
+    Height = 15
     Top = 64
-    Width = 65
+    Width = 52
     Alignment = taRightJustify
     Caption = 'TrayTrend'
     ParentColor = False

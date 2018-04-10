@@ -27,13 +27,15 @@ uses
   intfgraphics, LCLType, StdCtrls, Buttons,
   fpImage,  fphttpclient, sha1, fpjson, dateutils, jsonconf,
   lazutf8sysutils, uconfig, usys, lclintf, Menus, uhover
-  {$ifdef Windows}, mmsystem, Comobj{$endif}{$ifdef Darwin}, speechsynthesizer, MacOSAll, appkit, CarbonGDIObjects, carbonmenus,{$ENDIF}
+  {$ifdef Windows}, mmsystem, Comobj, urlmon,{$endif}{$ifdef Darwin}, speechsynthesizer, MacOSAll, appkit, CarbonGDIObjects, carbonmenus,{$ENDIF}
   Classes, stuff;
 
 type
 
-
-  TOSImg = TBitmap;
+  {$ifdef Darwin}
+    {$define OSBitmap}
+  {$endif}
+  TOSImg = {$ifdef OSBitmap}TBitmap{$else}TIcon{$endif};
 
   // Settings stored in the config file
   TUserVals = record
@@ -69,6 +71,8 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    miExit: TMenuItem;
     miAbout: TMenuItem;
     miTrend: TMenuItem;
     Panel1: TPanel;
@@ -88,6 +92,7 @@ type
     procedure MenuItem4Click(Sender: TObject);
     procedure MenuItem5Click(Sender: TObject);
     procedure miAboutClickA(Sender: TObject);
+    procedure miExitClick(Sender: TObject);
     procedure tTrayClick(Sender: TObject);
     procedure tUpdateTimer(Sender: TObject);
     procedure UpdateTrend(velocity: single; desc, device: string; newdate: tdatetime);
@@ -169,6 +174,8 @@ begin
   try
    with TFPHTTPClient.Create(nil) do
    try
+
+
      AddHeader('API-SECRET', SHA1Print(SHA1String(cfg.api)));
      ans := Get(cfg.url + '/api/v1/'+metric+'.json');
      result := GetJSON(ans);
@@ -192,7 +199,12 @@ end;
 
 // Check the application version
 function tfMain.CheckVesion(current: Single; prerelease: boolean): boolean;
+{$ifdef Windows}
+const
+  f1 = {$ifdef CPUX86_64}'ssleay32.dll'{$else}'libssl32.dll'{$endif};
+  f2 = {$ifdef CPUX86_64}'libeay32.dll'{$else}'libeay32.dll'{$endif};
 var
+{$endif}
   ans, ver : string;
   res:TJSONData;
   tmpfs: TFormatSettings;
@@ -203,11 +215,27 @@ begin
   // We want to differentiate releases and pre builds
   if not prerelease then
     ver := 'v'+ver;
+  ans := '';
+  try
 
   with TFPHTTPClient.Create(nil) do begin
    AddHeader('User-Agent','Mozilla/5.0 (compatible; fpweb) TrayTrend/'+ver);                       // We don't get any result without the user agent set
    ans :=  Get('https://api.github.com/repos/slicke/traytrend/releases/latest');                   // As GitHub for the recent releases
   end;
+  except {$ifdef Windows}
+    on E: EInOutError do begin
+      if messagedlg('Missing Windows components', 'Many, many programs need OpenSSL. Rcent Windows 10 versions now ship it aswell, but we couldn''t find it!'+
+             'Download now?', mtWarning, [mbYes, mbAbort], 0, mbYes) = mrYes then begin
+      if not UrlDownloadToFile(nil, PChar('http://www.miroslavnovak.com/totalcmd-openssl/64bit/'+f1), PChar(ExtractFileDir(Application.ExeName)+'\'+f1), 0, nil) = 0 then
+        ShowMessage('We didn''t get it!');
+      if not UrlDownloadToFile(nil, PChar('http://www.miroslavnovak.com/totalcmd-openssl/64bit/'+f2), PChar(ExtractFileDir(Application.ExeName)+'\'+f2), 0, nil) = 0 then
+        ShowMessage('We didn''t get it!');
+      end else
+       ShowMessage('You will not be able to use https addresses!');
+      {$endif}
+  end;
+ end;
+
   if ans = '' then
     Exit;
 
@@ -555,6 +583,11 @@ begin
   ttMsg('TrayTrend is a desktop monitor for the NightScout system, licensed under the GNU Public License v3. Original work by Björn Lindh: github.com/slicke');
 end;
 
+procedure TfMain.miExitClick(Sender: TObject);
+begin
+  Application.Terminate;
+end;
+
 procedure TfMain.tTrayClick(Sender: TObject);
 begin
 
@@ -769,12 +802,11 @@ begin
     end;
 
     // Set icons
-    {$ifdef Darwin}
     ilBG.GetIcon(i, smallimg);
-    ilFull.GetBitmap(i, img);
+    {$ifdef OSBitmap}
+      ilFull.GetBitmap(i, img);
     {$else}
-    ilBG.GetIcon(i, smallimg);
-    ilFull.GetIcon(i, img);
+      ilFull.GetIcon(i, img);
     {$endif}
 
     // Manage notifications
@@ -805,7 +837,7 @@ begin
           SavedCW := Get8087CW;
           voice := CreateOLEObject('SAPI.SpVoice');
           Set8087CW(SavedCW or $4);
-          if speech <> '' then
+          if speech <> '' then begin
             voice.Speak('TrayTrend Update! '+speech+ ' Reading uploaded '+ StringReplace(lblTimeAgo.Caption, '(s)', 's',[]), 1);
           end;
         finally
@@ -851,6 +883,7 @@ begin
       {$ENDIF}
     end;
   end;
+
 end;
 
 // Get the correct color for a BG value in the UI
@@ -888,11 +921,10 @@ var
   TempIntfImg: TLazIntfImage;
   ImgHandle, ImgMaskHandle: HBitmap;
   w, h: Integer;
-  TempBitmap{$ifdef Darwin}, macbitmap: TBitmap{$endif};
+  TempBitmap{$ifdef Darwin}, macbitmap{$endif}: TBitmap;
   bgarrow: ticon;
   bgcolor: tcolor;
   bgreading: string;
-
 begin
   try
     FetchValues;
@@ -924,9 +956,15 @@ begin
     {$ifdef windows}
       TempBitmap.Canvas.Font.Name := 'Trebuchet MS';
       TempBitmap.Canvas.Font.Style := [fsBold];
+      TempBitmap.Canvas.Font.Quality:=fqCleartype;
       TempBitmap.Canvas.Font.Size := 9;
     {$endif}
-    TempBitMap.Canvas.TextOut(0, 7 , FormatBG(bgval, true));//0,0,'10.2');
+    if cfg.mmol then begin
+      TempBitmap.Canvas.Font.Size := 8;
+      TempBitMap.Canvas.TextOut(0, 0 , inttostr(trunc(ConvertBGUnit(bgval, false))));//0,0,'10.2');
+      TempBitMap.Canvas.TextOut(TempBitmap.width-tempBitmap.Canvas.Font.Size-1, 7 , inttostr(round(frac(ConvertBGUnit(bgval, false))*10)));
+    end else
+      TempBitMap.Canvas.TextOut(0, 0 , FormatBG(bgval, true));//0,0,'10.2');
 //    TempBitMap.Canvas.TextOut(0,10,GetUTFArrow(lastbgtrend));//0,0,'10.2');
     miTrend.ImageIndex := ord(lastbgtrend);
     imTrend.Caption := FormatBG(bgval, true) + lblTrend.Caption;

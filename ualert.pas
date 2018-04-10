@@ -43,7 +43,7 @@ var
   ABitmap: TBitmap;
 begin
   {$ifdef Windows}
-  BorderStyle:=bsNone;
+(*  BorderStyle:=bsNone;
   ABitmap := TBitmap.Create;
   ABitmap.Monochrome := True;
   ABitmap.Width := Width; // or Form1.Width
@@ -57,16 +57,19 @@ begin
 
     Canvas.Draw(0,0,ABitmap);
     SetShape(ABitmap);
-     ABitmap.Free;
+     ABitmap.Free;     *)
   {$endif}
-  {$ifndef Windows}
+  {$ifndef XWindows}
   color := clblack;
   BorderStyle:=bsNone;
   lblmsg.Font.color := clwhite;
   {$endif}
-  {$ifdef Darwin}
+  {$if Defined(Darwin)}
   left := screen.Width-width-10;
   top := 25;
+  {$elseif Defined(Windows)}
+  left := screen.Width-width-10;
+  top := screen.Height-25;
   {$else}
   left := 10;
   top := 25;

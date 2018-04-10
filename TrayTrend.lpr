@@ -26,7 +26,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, lazcontrols, umain, uconfig, usplash, usys, uhover, uInfo, stuff,
-  ualert, OSXUtils
+  ualert
   { you can add units after this };
 
 {$R *.res}
