@@ -116,7 +116,9 @@ type
   end;
 
 const
-  ttversion = 0.31;
+  ttversion = 1.91;
+  ttversionpre = true;
+  ttversionpretty = ('Pre-release 2-r1 (internal: 1.91)');
 var
   fMain: TfMain;
   cfg: TUserVals;                  // Current config variables loaded
@@ -495,7 +497,7 @@ begin
     end;
   end;
 
-  CheckVesion(ttversion, false);
+  CheckVesion(ttversion, ttversionpre);
   {$ifdef DARWIN}
     fMain.top := pnTop.Height;
 
@@ -667,6 +669,11 @@ begin
       fSysSettings.cbArrowLeft.Checked:=true
   else
       fSysSettings.cbArrowMix.Checked:=true;
+
+  // cfg.mac_dock;
+   fSysSettings.cbBouce.Checked := cfg.mac_bounce;
+   fSysSettings.cbBounceOne.Checked := cfg.mac_bounce_once;
+
 
   fSysSettings.ShowModal;
   // Since Modal is blocking, the form will write a new cfg which we then load
