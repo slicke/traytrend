@@ -116,9 +116,7 @@ type
   end;
 
 const
-  ttversion = 1.91;
-  ttversionpre = true;
-  ttversionpretty = ('Pre-release 2-r1 (internal: 1.91)');
+  ttversion = 0.31;
 var
   fMain: TfMain;
   cfg: TUserVals;                  // Current config variables loaded
@@ -205,8 +203,8 @@ function tfMain.CheckVesion(current: Single; prerelease: boolean): boolean;
 const
   f1 = {$ifdef CPUX86_64}'ssleay32.dll'{$else}'libssl32.dll'{$endif};
   f2 = {$ifdef CPUX86_64}'libeay32.dll'{$else}'libeay32.dll'{$endif};
-{$endif}
 var
+{$endif}
   ans, ver : string;
   res:TJSONData;
   tmpfs: TFormatSettings;
@@ -234,8 +232,8 @@ begin
         ShowMessage('We didn''t get it!');
       end else
        ShowMessage('You will not be able to use https addresses!');
-    end;
       {$endif}
+  end;
  end;
 
   if ans = '' then
@@ -249,8 +247,7 @@ begin
     if (res.Items[0].FindPath('tag_name').AsString <> ver) then
           if MessageDlg('New version released', 'A new version of TrayTrend is available!'+LineEnding+LineEnding+'TrayTrend ' + res.Items[0].FindPath('tag_name').AsString+' has been released. You are currently using '+ver+'.'+LineEnding+'Would you like to get information about the new version?', mtConfirmation,  [mbYes, mbNo], 0) = mrYes then
                openurl(res.Items[0].FindPath('html_url').AsString);
-  except
-      ttMsg('Update check failed!', 'We were not able to check for updates! You should check out github.com/slicke/traytrend for updates!')
+  finally
   end;
 end;
 
@@ -498,7 +495,7 @@ begin
     end;
   end;
 
-  CheckVesion(ttversion, ttversionpre);
+  CheckVesion(ttversion, false);
   {$ifdef DARWIN}
     fMain.top := pnTop.Height;
 
@@ -670,11 +667,6 @@ begin
       fSysSettings.cbArrowLeft.Checked:=true
   else
       fSysSettings.cbArrowMix.Checked:=true;
-
-  // cfg.mac_dock;
-   fSysSettings.cbBouce.Checked := cfg.mac_bounce;
-   fSysSettings.cbBounceOne.Checked := cfg.mac_bounce_once;
-
 
   fSysSettings.ShowModal;
   // Since Modal is blocking, the form will write a new cfg which we then load

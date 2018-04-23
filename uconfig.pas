@@ -60,7 +60,6 @@ type
     procedure btnCheckClick(Sender: TObject);
     procedure btnOK3DragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure btnOKClick(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure Image1Click(Sender: TObject);
   private
 
@@ -109,11 +108,6 @@ begin
   end;
   c.free;
   Close;
-end;
-
-procedure TfSettings.FormShow(Sender: TObject);
-begin
-
 end;
 
 procedure TfSettings.btnOK1Click(Sender: TObject);

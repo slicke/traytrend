@@ -1,7 +1,7 @@
 object fSettings: TfSettings
-  Left = 527
+  Left = 790
   Height = 465
-  Top = 259
+  Top = 293
   Width = 427
   BorderIcons = []
   BorderStyle = bsSingle
@@ -9,12 +9,11 @@ object fSettings: TfSettings
   ClientHeight = 465
   ClientWidth = 427
   FormStyle = fsStayOnTop
-  OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.8.2.0'
   object edURL: TEdit
     Left = 120
-    Height = 22
+    Height = 23
     Top = 32
     Width = 280
     TabOrder = 0
@@ -22,9 +21,9 @@ object fSettings: TfSettings
   end
   object Label1: TLabel
     Left = 120
-    Height = 18
+    Height = 21
     Top = 8
-    Width = 214
+    Width = 192
     Caption = 'NightScout Connection Info'
     Font.Height = -16
     ParentColor = False
@@ -32,7 +31,7 @@ object fSettings: TfSettings
   end
   object edSecret: TEdit
     Left = 120
-    Height = 22
+    Height = 23
     Top = 64
     Width = 280
     TabOrder = 1
@@ -49,9 +48,9 @@ object fSettings: TfSettings
   end
   object rbMmol: TRadioButton
     Left = 120
-    Height = 18
+    Height = 19
     Top = 118
-    Width = 65
+    Width = 63
     Caption = 'mmol/L'
     Checked = True
     TabOrder = 4
@@ -59,15 +58,15 @@ object fSettings: TfSettings
   end
   object rbMgdl: TRadioButton
     Left = 120
-    Height = 18
+    Height = 19
     Top = 144
-    Width = 59
+    Width = 56
     Caption = 'mg/dL'
     TabOrder = 3
   end
   object seFreq: TSpinEdit
     Left = 168
-    Height = 16
+    Height = 23
     Top = 200
     Width = 58
     MaxValue = 255
@@ -75,9 +74,9 @@ object fSettings: TfSettings
   end
   object Label3: TLabel
     Left = 120
-    Height = 18
+    Height = 21
     Top = 96
-    Width = 93
+    Width = 84
     Caption = 'Display Unit'
     Font.Height = -16
     ParentColor = False
@@ -85,9 +84,9 @@ object fSettings: TfSettings
   end
   object Label4: TLabel
     Left = 120
-    Height = 18
+    Height = 21
     Top = 176
-    Width = 137
+    Width = 123
     Caption = 'Update frequency'
     Font.Height = -16
     ParentColor = False
@@ -95,27 +94,27 @@ object fSettings: TfSettings
   end
   object Label8: TLabel
     Left = 120
-    Height = 16
+    Height = 15
     Top = 200
-    Width = 33
+    Width = 28
     Caption = 'Every'
     ParentColor = False
     ParentFont = False
   end
   object Label9: TLabel
     Left = 240
-    Height = 16
+    Height = 15
     Top = 200
-    Width = 51
+    Width = 43
     Caption = 'minutes'
     ParentColor = False
     ParentFont = False
   end
   object Label5: TLabel
     Left = 120
-    Height = 18
+    Height = 21
     Top = 254
-    Width = 96
+    Width = 85
     Caption = 'Audio Alerts'
     Font.Height = -16
     ParentColor = False
@@ -123,7 +122,7 @@ object fSettings: TfSettings
   end
   object fnLow: TFileNameEdit
     Left = 120
-    Height = 22
+    Height = 23
     Top = 278
     Width = 280
     DialogOptions = [ofFileMustExist, ofNoNetworkButton, ofEnableSizing, ofViewDetail]
@@ -139,7 +138,7 @@ object fSettings: TfSettings
   end
   object fnHigh: TFileNameEdit
     Left = 120
-    Height = 22
+    Height = 23
     Top = 310
     Width = 280
     DialogOptions = [ofFileMustExist, ofNoNetworkButton, ofEnableSizing, ofViewDetail]
@@ -155,9 +154,9 @@ object fSettings: TfSettings
   end
   object Label10: TLabel
     Left = 224
-    Height = 16
+    Height = 15
     Top = 256
-    Width = 166
+    Width = 144
     Caption = '(EXPERIMENTAL FEATURE!)'
     Font.Style = [fsItalic]
     ParentColor = False
@@ -165,25 +164,25 @@ object fSettings: TfSettings
   end
   object cbVoice: TCheckBox
     Left = 120
-    Height = 18
+    Height = 19
     Top = 350
-    Width = 296
+    Width = 264
     Caption = 'Announce with speech when reading is hi/low'
     TabOrder = 8
   end
   object cbVoiceTrend: TCheckBox
     Left = 120
-    Height = 18
+    Height = 19
     Top = 366
-    Width = 204
+    Width = 180
     Caption = 'Announce non-steady treands'
     TabOrder = 9
   end
   object cbVoiceAll: TCheckBox
     Left = 120
-    Height = 18
+    Height = 19
     Top = 382
-    Width = 154
+    Width = 138
     Caption = 'Announce all readings'
     TabOrder = 10
   end
