@@ -1,3 +1,5 @@
+## This project is inactive, please see [Trndi](https://github.com/slicke/trndi) 
+
 [![Build Status](https://travis-ci.org/slicke/traytrend.svg?branch=master)](https://travis-ci.org/slicke/traytrend)
 # ![Logo](https://raw.githubusercontent.com/slicke/traytrend/master/img/up1.jpg "Logo") TrayTrend
 
